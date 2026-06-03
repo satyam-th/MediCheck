@@ -1,0 +1,117 @@
+.mainNavContainer{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 50px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+}
+
+.logoContainer{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-decoration: none;
+    gap: 4px;
+}
+
+.logo{
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.logoText{
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 0.5px;
+}
+
+.navlinks{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.link{
+    color: var(--text-color-primary);
+    text-decoration: none;
+    transition: color 0.3s ease-in;
+}
+
+.link:hover{
+    color: var(--primary);
+}
+
+.auth{
+    padding: 8px 14px;
+    border-radius: 20px;
+    background-color: var(--primary);
+    color: white;
+}
+
+.authLink{
+    text-decoration: none;
+    color: #F0FDF4;
+    text-decoration: underline rgba(255, 0, 0, 0);
+    transition: color 0.2s ease-out
+}
+
+.authLink:hover{
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+.searchWrapper{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchIcon{
+    color: var(--text-color-secondary);
+    position: absolute;
+    left: 15px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    pointer-events: none;
+    align-items: center;
+}
+
+.searchMed{
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    padding-left: 42px;
+    width: 400px;
+    outline: none;
+    border-radius: 20px;
+    border: 1px solid #9CA3AF;
+    transition: border 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.searchMed::placeholder{
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+input[type="search"]{
+    font-family: "DM Sans", sans-serif;
+}
+
+.searchMed:hover{
+    border: 1px solid var(--primary);
+}
+
+.searchMed:focus{
+    border: 1px solid var(--primary);
+    box-shadow: 
+    0 0 0 1px rgba(0, 87, 184, 0.4),
+    0 0 8px 4px rgba(0, 87, 184, 0.12);
+}
