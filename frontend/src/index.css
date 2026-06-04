@@ -7,8 +7,13 @@
     --border: #D1D5DB;
     --secondary:  #F97316;
     --secondary-hover: #C2410C;
+    /* --footer-bg-color: #0F172A; */
 
     --font-main: "DM Sans", sans-serif;
+}
+
+*{
+    box-sizing: border-box;
 }
 
 body{

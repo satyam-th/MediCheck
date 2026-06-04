@@ -1,0 +1,76 @@
+.mainFooter{
+    background-color: var(--primary-hover);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px 80px 20px 80px;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mainFooterContainer{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.mediCheckDesc{
+    flex: 1.5;
+    min-width: 260px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logoText{
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.tagLine{
+    font-size: 0.8rem;
+    margin-top: 0;
+    text-align: justify;
+}
+
+.colHeading{
+    font-weight: bold;
+}
+
+.linksList,.contactList{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+}
+
+.footerLink,.contactLink{
+    color: white;
+    text-decoration: none;
+    transition: text-decoration 0.5s ease-in;
+}
+
+.footerLink:hover,.contactLink:hover{
+    text-decoration: underline;
+}
+
+.contactItem{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.copyright{
+    text-align: center;
+    margin-top: 5rem;
+    margin-bottom: 0;
+    color: var(--border);
+}
