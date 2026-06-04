@@ -15,3 +15,9 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'users'
+    
+    def __str__(self):
+        return f"{self.get_full_name() or self.username} ({self.get_user_type_display()})"
