@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
-import {Search} from 'lucide-react';
+import {Search, Menu, X} from 'lucide-react';
 import medicheckLogo from '../../../assets/logo/medicheck-logo.png';
 
 import styles from './NavBar.module.css';
+import { useState } from "react";
 
 export default function NavBar(){
+    const[menuOpen, setMenuOpen] = useState(false);
     return(
        <>
         <nav className={styles.mainNavContainer}>
@@ -13,12 +15,16 @@ export default function NavBar(){
                 <div className={styles.logoText}>medicheck</div>
             </Link>
             
-            <div className={styles.navlinks}>
-                
+            {/* hamburger style for mobile view */}
+            <button className={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
+                {menuOpen ? <X size={24}/> : <Menu size={24}/>}
+            </button>
 
-                <Link to='/' className={styles.link}>Home</Link>
-                <Link to='/about' className={styles.link}>About Us</Link>
-                <Link to='/pharmacies' className={styles.link}>Pharmacies</Link>
+            <div className={`${styles.navlinks} ${menuOpen ? styles.open : ''}`}>
+
+                <Link to='/' className={styles.link} onClick={()=>setMenuOpen(false)}>Home</Link>
+                <Link to='/about' className={styles.link} onClick={()=>setMenuOpen(false)}>About Us</Link>
+                <Link to='/pharmacies' className={styles.link} onClick={()=>setMenuOpen(false)}>Pharmacies</Link>
 
                 <form className={styles.searchWrapper}>
                     <Search className={styles.searchIcon} />
@@ -27,8 +33,8 @@ export default function NavBar(){
                 </form>
                 
                 <div className={styles.auth}>
-                <Link to='/login' className={styles.authLink}>Login</Link>/
-                <Link to='/register' className={styles.authLink}>Register</Link>
+                <Link to='/login' className={styles.authLink} onClick={()=>setMenuOpen(false)}>Login</Link>/
+                <Link to='/register' className={styles.authLink} onClick={()=>setMenuOpen(false)}>Register</Link>
                 </div>
             </div>
 

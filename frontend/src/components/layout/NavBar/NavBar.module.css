@@ -115,3 +115,57 @@ input[type="search"]{
     0 0 0 1px rgba(0, 87, 184, 0.4),
     0 0 8px 4px rgba(0, 87, 184, 0.12);
 }
+
+.hamburger{
+    display: none;
+}
+
+@media(max-width: 768px){
+    .mainNavContainer {
+        padding: 16px 24px;
+    }
+    .hamburger{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--text-color-primary);
+        padding: 4px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+    }
+
+    .hamburger:hover{
+        background-color: #f3f4f6;
+    }
+
+    .navlinks{
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        width: 100%;
+        padding: 16px 0 8px 0;
+        border-top: 1px solid var(--border);
+        margin-top: 16px;
+    }
+
+    .navlinks.open{
+        display: flex;
+    }
+
+    .searchWrapper {
+        width: 100%;
+    }
+
+    .searchMed {
+        width: 100%;
+    }
+
+    .auth {
+        width: 100%;
+        text-align: center;
+    }
+}
