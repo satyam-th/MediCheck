@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import {Search, Menu, X} from 'lucide-react';
 import medicheckLogo from '../../../assets/logo/medicheck-logo.png';
+import {Menu, X} from 'lucide-react';
+
+import SearchBar from "../../shared/SearchBar/SearchBar";
 
 import styles from './NavBar.module.css';
 import { useState } from "react";
@@ -26,11 +28,7 @@ export default function NavBar(){
                 <Link to='/about' className={styles.link} onClick={()=>setMenuOpen(false)}>About Us</Link>
                 <Link to='/pharmacies' className={styles.link} onClick={()=>setMenuOpen(false)}>Pharmacies</Link>
 
-                <form className={styles.searchWrapper}>
-                    <Search className={styles.searchIcon} />
-                    <input type="search" placeholder="Search medicine name, pharmacy name..." className={styles.searchMed}/>
-
-                </form>
+                <SearchBar size="small" className={styles.navSearchBar}/>
                 
                 <div className={styles.auth}>
                 <Link to='/login' className={styles.authLink} onClick={()=>setMenuOpen(false)}>Login</Link>/

@@ -1,0 +1,54 @@
+.heroContainer{
+    background-image: url('../../../../assets/user/hero-image.png');
+    min-height: 80vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding:  60px 10%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.gradientOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right, 
+        rgba(0, 87, 184, 1) 0%, 
+        rgba(0, 87, 184, 0.95) 20%, 
+        rgba(0, 87, 184, 0.7) 40%, 
+        rgba(0, 87, 184, 0) 80%
+    );
+    z-index: 1;
+}
+
+.heroContent {
+    position: relative;
+    z-index: 2;
+    max-width: 550px;
+    color: white;
+}
+
+.largeText {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.5px;
+}
+
+.smallText {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin: 0 0 35px 0;
+    opacity: 0.9;
+    font-weight: 400;
+}

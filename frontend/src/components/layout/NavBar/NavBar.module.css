@@ -68,54 +68,6 @@
     color: #ffffff;
 }
 
-.searchWrapper{
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.searchIcon{
-    color: var(--text-color-secondary);
-    position: absolute;
-    left: 15px;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    pointer-events: none;
-    align-items: center;
-}
-
-.searchMed{
-    font-size: 0.9rem;
-    padding: 10px 20px;
-    padding-left: 42px;
-    width: 400px;
-    outline: none;
-    border-radius: 20px;
-    border: 1px solid #9CA3AF;
-    transition: border 0.15s ease-out, box-shadow 0.15s ease-out;
-}
-
-.searchMed::placeholder{
-    font-size: 0.9rem;
-    color: var(--text-color-secondary);
-}
-
-input[type="search"]{
-    font-family: "DM Sans", sans-serif;
-}
-
-.searchMed:hover{
-    border: 1px solid var(--primary);
-}
-
-.searchMed:focus{
-    border: 1px solid var(--primary);
-    box-shadow: 
-    0 0 0 1px rgba(0, 87, 184, 0.4),
-    0 0 8px 4px rgba(0, 87, 184, 0.12);
-}
-
 .hamburger{
     display: none;
 }
@@ -156,11 +108,11 @@ input[type="search"]{
         display: flex;
     }
 
-    .searchWrapper {
+    .navSearchBar {
         width: 100%;
     }
 
-    .searchMed {
+    .navSearchBar input {
         width: 100%;
     }
 
