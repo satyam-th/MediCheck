@@ -3,10 +3,6 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 40px 80px 20px 80px;
     color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     box-sizing: border-box;
 }
 
@@ -78,7 +74,6 @@
 @media (max-width: 768px) {
     .mainFooter {
         padding: 32px 40px 16px 40px;
-        position: static;
     }
 
     .mainFooterContainer {
