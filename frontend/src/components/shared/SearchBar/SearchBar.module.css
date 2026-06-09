@@ -78,3 +78,18 @@ input[type="search"]{
 .large:focus-within .searchIcon {
   transform: translateY(-1px); 
 }
+
+@media(max-width:768px){
+.large .searchMed {
+  padding: 12px 18px;
+  padding-left: 52px;
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.8rem;
+}
+
+.large .searchIcon {
+  width: 20px;
+  height: 20px;
+}
+}
