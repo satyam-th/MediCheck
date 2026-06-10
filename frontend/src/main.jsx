@@ -6,6 +6,7 @@ import App from './App.jsx'
 
 import "@fontsource/dm-sans";
 import "@fontsource/dm-sans/900";
+import "@fontsource/dm-sans/500";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
