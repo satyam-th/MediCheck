@@ -2,6 +2,7 @@ import NavBar from "../../../components/layout/NavBar/NavBar";
 import Footer from '../../../components/layout/Footer/Footer';
 import HeroSection from '../../../components/user/home/HeroSection/HeroSection';
 import QuickFeatures from "../../../components/user/home/QuickFeaturesSection/QuickFeatures";
+import Working from "../../../components/user/home/Working/Working";
 
 import styles from '../Home/Home.module.css'
 export default function Home(){
@@ -12,6 +13,7 @@ export default function Home(){
             <main className={styles.pageContent}>
                 <HeroSection/>
                 <QuickFeatures/>
+                <Working/>
             </main>
             <Footer/>
         </div>
