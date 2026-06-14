@@ -1,0 +1,138 @@
+.mainContainer{
+    padding: 40px 60px ;
+    background-color: var(--shadow);
+}
+
+.headingContents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color-primary);
+}
+
+.firstHeading, .secondHeading, .thirdHeading{
+    margin: 0;
+} 
+
+.firstHeading{
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 1.6rem;
+}
+
+.secondHeading{
+    font-size: 2rem;
+    font-weight: 500;
+    word-spacing: 0.2rem;
+    margin-top: 1rem;
+}
+
+.thirdHeading{
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+    word-spacing: 0.1rem;
+}
+
+/* cards */
+.workingCard{
+    display: flex;
+    margin-top: 4rem;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.workingContents{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 20px 40px;
+    flex: 1;
+
+}
+
+.title, .description{
+    margin: 0;
+}
+
+.number{
+    color: white;
+    background-color: var(--primary);
+    font-weight: 600;
+    border-radius: 50%;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title{
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.description{
+    color: var(--text-color-secondary);
+    margin-top: 10px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border);
+}
+
+@media(max-width: 768px){
+    .mainContainer{
+        padding: 40px 20px ;
+    }
+
+    .firstHeading{
+        font-size: 1.3rem;
+    }
+
+    .secondHeading{
+        font-size: 1.4rem;
+        margin-top: 1rem;
+    }
+
+    .headingContents{
+        gap: 6px;
+    }
+
+    .thirdHeading{
+        font-size: 1rem;
+    }
+
+    .workingCard{
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+        gap: 14px;
+    }
+
+    .workingContents{
+        padding: 10px 20px;
+    }
+
+    .title{
+        font-size: 1rem;
+        margin-top: 14px;
+    }
+
+    .description{
+        font-size: 0.9rem;
+    }
+
+    .arrowIcon {
+        transform: rotate(90deg);
+    }
+
+}

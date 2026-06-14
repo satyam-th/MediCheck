@@ -1,0 +1,122 @@
+.mainContainer{
+    padding: 40px 60px ;
+    background-color: var(--shadow);
+}
+
+.headingContents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color-primary);
+}
+
+.firstHeading, .secondHeading, .thirdHeading{
+    margin: 0;
+} 
+
+.firstHeading{
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 1.6rem;
+}
+
+.secondHeading{
+    font-size: 2rem;
+    font-weight: 500;
+    word-spacing: 0.2rem;
+    margin-top: 1rem;
+}
+
+.thirdHeading{
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+    word-spacing: 0.1rem;
+}
+
+/* cards */
+.guideCard{
+    display: flex;
+    margin-top: 4rem;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.guideContents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 40px;
+    flex: 1;
+
+}
+
+.title, .description{
+    margin: 0;
+}
+.icon{
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title{
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.description{
+    color: var(--text-color-secondary);
+    margin-top: 10px;
+}
+
+@media(max-width: 768px){
+    .mainContainer{
+        padding: 40px 20px ;
+    }
+
+    .firstHeading{
+        font-size: 1.3rem;
+    }
+
+    .secondHeading{
+        font-size: 1.4rem;
+        margin-top: 1rem;
+    }
+
+    .headingContents{
+        gap: 6px;
+    }
+
+    .thirdHeading{
+        font-size: 1rem;
+    }
+
+    .guideCard{
+        margin-top: 2rem;
+        gap: 14px;
+    }
+
+    .guideContents{
+        padding: 10px 20px;
+        min-width: 150px;
+    }
+
+    .title{
+        font-size: 1rem;
+        margin-top: 14px;
+    }
+
+.description{
+        font-size: 0.9rem;
+    }
+}

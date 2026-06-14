@@ -1,0 +1,123 @@
+.mainNavContainer{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 50px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+}
+
+.logoContainer{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-decoration: none;
+    gap: 4px;
+}
+
+.logo{
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.logoText{
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 0.5px;
+}
+
+.navlinks{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.link{
+    color: var(--text-color-primary);
+    text-decoration: none;
+    transition: color 0.3s ease-in;
+}
+
+.link:hover{
+    color: var(--primary);
+}
+
+.auth{
+    padding: 8px 14px;
+    border-radius: 20px;
+    background-color: var(--primary);
+    color: white;
+}
+
+.authLink{
+    text-decoration: none;
+    color: #F0FDF4;
+    text-decoration: underline rgba(255, 0, 0, 0);
+    transition: color 0.2s ease-out
+}
+
+.authLink:hover{
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+.hamburger{
+    display: none;
+}
+
+@media(max-width: 768px){
+    .mainNavContainer {
+        padding: 16px 24px;
+    }
+    .hamburger{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--text-color-primary);
+        padding: 4px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+    }
+
+    .hamburger:hover{
+        background-color: #f3f4f6;
+    }
+
+    .navlinks{
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        width: 100%;
+        padding: 16px 0 8px 0;
+        border-top: 1px solid var(--border);
+        margin-top: 16px;
+    }
+
+    .navlinks.open{
+        display: flex;
+    }
+
+    .navSearchBar {
+        width: 100%;
+    }
+
+    .navSearchBar input {
+        width: 100%;
+    }
+
+    .auth {
+        width: 100%;
+        text-align: center;
+    }
+}
