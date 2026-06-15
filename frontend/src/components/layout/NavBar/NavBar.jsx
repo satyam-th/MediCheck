@@ -30,10 +30,8 @@ export default function NavBar(){
 
                 <SearchBar size="small" className={styles.navSearchBar}/>
                 
-                <div className={styles.auth}>
-                <Link to='/login' className={styles.authLink} onClick={()=>setMenuOpen(false)}>Login</Link>/
-                <Link to='/register' className={styles.authLink} onClick={()=>setMenuOpen(false)}>Register</Link>
-                </div>
+                <Link to='/login' className={styles.portalBtn} onClick={()=>setMenuOpen(false)}>Management Portal</Link>
+        
             </div>
 
         </nav>
