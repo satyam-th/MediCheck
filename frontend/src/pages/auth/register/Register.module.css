@@ -1,0 +1,54 @@
+.welcomeContent {
+  margin-bottom: 1.5rem;
+}
+
+.welcomeText {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-color-primary);
+}
+
+.welcomeSubtext {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin: 4px 0 0 0;
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+
+.switchAuth {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.switchAuth a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.switchAuth a:hover {
+  color: var(--secondary-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

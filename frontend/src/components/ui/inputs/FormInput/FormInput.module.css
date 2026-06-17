@@ -1,0 +1,50 @@
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.label {
+  color: var(--text-color-primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.input {
+  outline: none;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #6c757d;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+  font-size: 0.95rem;
+  font-family: var(--font-main);
+  color: var(--text-color-primary);
+}
+
+.input::placeholder {
+  color: #adb5bd;
+  font-size: 0.95rem;
+}
+
+.input:hover {
+  border-color: var(--primary-hover);
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px rgba(0, 87, 184, 0.15),
+              0 1px 2px rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 87, 184, 0.8);
+}
+
+.inputError {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.15);
+}
+
+.errorText {
+  color: #e53e3e;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
