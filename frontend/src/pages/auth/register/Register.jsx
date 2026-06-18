@@ -1,5 +1,6 @@
 import styles from './Register.module.css'
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import AuthLayout from "../../../components/layout/AuthLayout/AuthLayout";
 import Button from '../../../components/ui/Button/Button';
@@ -7,6 +8,7 @@ import FormInput from '../../../components/ui/inputs/FormInput/FormInput';
 import FormDivider from '../../../components/ui/FormDivider/FormDivider';
 
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Rocket, CircleCheck, Users2 } from 'lucide-react';
 
 export default function Register() {
@@ -39,6 +41,8 @@ export default function Register() {
     openTime: '',
     closeTime: ''
   });
+
+  const navigate  = useNavigate();
 
   const features = [
     { icon: <Rocket size={18} style={{ color: "#F97316" }} />, text: "Quick and Easy onboarding" },
@@ -160,6 +164,12 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
+
+    toast.success('Application Submitted. Please wait your account is being verified by the admin.')
+    setTimeout(() => {
+      navigate('/login');
+    }, 3000);
+    
     console.log(formData);
   };
 
