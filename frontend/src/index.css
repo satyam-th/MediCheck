@@ -1,0 +1,24 @@
+:root{
+    --primary: #0057B8;
+    --primary-hover:  #00418A;
+    --text-color-primary: #212121;
+    --text-color-secondary: #486581;
+    --shadow: #F9FAFB;
+    --border: #D1D5DB;
+    --secondary:  #F97316;
+    --secondary-hover: #C2410C;
+    /* --footer-bg-color: #0F172A; */
+
+    --font-main: "DM Sans", sans-serif;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: "DM Sans", sans-serif;
+    color: var(--text-color);
+}
