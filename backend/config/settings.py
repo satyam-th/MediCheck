@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,13 +44,17 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     #this is for project logic
-    'accounts',
-    'pharmacy',
-    'Users',
+    'catalog',
+    'pharmacies',
+    'users',
+    'customers',
 
 ]
+ #tell django to use custom models
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,8 +131,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
  
- #tell django to use custom models
-AUTH_USER_MODEL = 'accounts.User'
+
 
 #rest framework configuration 
 REST_FRAMEWORK = {
@@ -155,3 +159,15 @@ SIMPLE_JWT = {
 
 #fow low stock
 LOW_STOCK_THRESHOLD = 5
+
+#static & media
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / os.environ.get('MEDIA_ROOT', 'media')
+
+#misc
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
