@@ -1,0 +1,61 @@
+.welcomeContent {
+  margin-bottom: 1.5rem;
+}
+
+.welcomeText {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-color-primary);
+}
+
+.welcomeSubtext {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin: 4px 0 0 0;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.remembermeBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.remembermeBox input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.remembermeBox label {
+  cursor: pointer;
+}
+
+.switchAuth {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.switchAuth a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.switchAuth a:hover {
+  color: var(--secondary-hover);
+  text-decoration: underline;
+}

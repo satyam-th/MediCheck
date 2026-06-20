@@ -1,0 +1,24 @@
+.line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.line::before,
+.line::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border);
+  opacity: 0.6;
+}
+
+.orLine {
+  padding: 0 16px;
+  color: var(--text-color-secondary);
+  opacity: 0.5;
+  font-size: 0.85rem;
+  margin: 0;
+  white-space: nowrap;
+}

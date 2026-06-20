@@ -49,23 +49,20 @@
     color: var(--primary);
 }
 
-.auth{
-    padding: 8px 14px;
-    border-radius: 20px;
+.portalBtn {
     background-color: var(--primary);
     color: white;
-}
-
-.authLink{
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-family: var(--font-main);
+    font-weight: 500;
+    font-size: 0.9rem;
     text-decoration: none;
-    color: #F0FDF4;
-    text-decoration: underline rgba(255, 0, 0, 0);
-    transition: color 0.2s ease-out
+    transition: background-color 0.2s ease;
 }
 
-.authLink:hover{
-    text-decoration: underline;
-    color: #ffffff;
+.portalBtn:hover {
+    background-color: var(--primary-hover);
 }
 
 .hamburger{
@@ -116,7 +113,7 @@
         width: 100%;
     }
 
-    .auth {
+    .portalBtn {
         width: 100%;
         text-align: center;
     }
