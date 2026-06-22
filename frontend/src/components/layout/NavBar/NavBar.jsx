@@ -30,7 +30,7 @@ export default function NavBar(){
 
                 <SearchBar size="small" className={styles.navSearchBar}/>
                 
-                <Link to='/login' className={styles.portalBtn} onClick={()=>setMenuOpen(false)}>Management Portal</Link>
+                <Link to='/login' className={styles.portalBtn} onClick={()=>setMenuOpen(false)}>Login</Link>
         
             </div>
 
