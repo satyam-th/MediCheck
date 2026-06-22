@@ -10,7 +10,7 @@ export default function SearchBar({size = "small", className=''}){
     return(
         <form className={`${styles.searchWrapper} ${styles[size]} ${className}`} onSubmit={handleSearch}>
             <Search className={styles.searchIcon} />
-            <input type="search" placeholder="Search medicine name, pharmacy name..." className={styles.searchMed}/>
+            <input type="search" placeholder="Search medicine (e.g., Paracetamol)" className={styles.searchMed}/>
         </form>
     );    
 }
