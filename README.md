@@ -62,7 +62,7 @@ The primary objective of MediCheck is to reduce the time and effort required to 
 Development Team
 
 * Satyam Thapa
-* Samikshya Shrestha
+* Samiksha Shrestha
 * Ugesh KC
 
 Malpi International College
