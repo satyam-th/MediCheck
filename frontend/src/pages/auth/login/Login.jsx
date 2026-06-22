@@ -89,7 +89,7 @@ export default function Login(){
 
                 <FormDivider text="or" />
 
-                <p className={styles.switchAuth}>Don't have and account? <Link to='/register'>Register your pharmacy</Link></p>
+                <p className={styles.switchAuth}>Don't have an account? <Link to='/register/customer'>Create a customer account</Link></p>
             </form>
         </AuthLayout>
 );
