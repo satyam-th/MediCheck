@@ -25,7 +25,7 @@ export default function NavBar(){
             <div className={`${styles.navlinks} ${menuOpen ? styles.open : ''}`}>
 
                 <Link to='/' className={styles.link} onClick={()=>setMenuOpen(false)}>Home</Link>
-                <Link to='/about' className={styles.link} onClick={()=>setMenuOpen(false)}>About Us</Link>
+                <Link to='/about' className={styles.link} onClick={()=>setMenuOpen(false)}>About</Link>
                 <Link to='/pharmacies' className={styles.link} onClick={()=>setMenuOpen(false)}>Pharmacies</Link>
 
                 <SearchBar size="small" className={styles.navSearchBar}/>

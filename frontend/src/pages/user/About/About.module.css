@@ -1,0 +1,136 @@
+:root {
+    --section-bg: #f8fbff;
+}
+
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.contentContainer {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 10%;
+    box-sizing: border-box;
+}
+
+.heroSection {
+    background: linear-gradient(135deg, rgba(0, 87, 184, 0.95), rgba(0, 87, 184, 0.75));
+    border-radius: 32px;
+    padding: 55px 60px;
+    color: white;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.heroContent {
+    max-width: 700px;
+}
+
+.overline {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    opacity: 0.92;
+}
+
+.title {
+    font-size: clamp(2.5rem, 3vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin: 0 0 20px 0;
+}
+
+.subtitle {
+    max-width: 620px;
+    font-size: 1.05rem;
+    line-height: 1.85;
+    opacity: 0.92;
+}
+
+.infoSection {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.infoCard {
+    background: white;
+    border: 1px solid rgba(13, 71, 161, 0.08);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.04);
+}
+
+.infoCard h2 {
+    margin: 0 0 14px 0;
+    font-size: 1.35rem;
+    color: var(--primary);
+}
+
+.infoCard p {
+    margin: 0;
+    color: #3e4f6e;
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.statsSection {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: var(--section-bg);
+    border-radius: 24px;
+    padding: 32px;
+}
+
+.statsCard {
+    flex: 1;
+    min-width: 200px;
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    border: 1px solid rgba(0, 87, 184, 0.12);
+    text-align: center;
+}
+
+.statsNumber {
+    margin: 0;
+    font-size: 2.3rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.statsLabel {
+    margin: 16px 0 0;
+    color: #3e4f6e;
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+@media (max-width: 960px) {
+    .contentContainer {
+        padding: 32px 6%;
+    }
+
+    .infoSection {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .heroSection {
+        padding: 36px 24px;
+    }
+
+    .statsSection {
+        padding: 24px;
+    }
+}
