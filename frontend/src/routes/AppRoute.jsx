@@ -3,8 +3,10 @@ import {Routes, Route} from 'react-router-dom';
 import Home from '../pages/user/Home/Home';
 import About from '../pages/user/About/About';
 import Login from '../pages/auth/login/Login';
-import Register from '../pages/auth/register/Register';
-// import Pharmacy from '../pages/pharmacy/Dashboard';
+import RegisterCustomer from '../pages/auth/register/RegisterCustomer';
+import RegisterPharmacy from '../pages/auth/register/RegisterPharmacy';
+
+import PharmacyDashboard from '../pages/pharmacy/Dashboard/Dashboard'
 // import Admin from '../pages/admin/Dashboard'
 
 export default function AppRoute(){
@@ -13,9 +15,11 @@ export default function AppRoute(){
             <Route path='/' element={<Home/>}/>
             <Route path='/about' element={<About/>}/>
             <Route path='/login' element={<Login/>}/>
-            <Route path='/register' element={<Register/>}/>
-            {/* <Route path='/pharmacy' element={<Pharmacy/>}/>
-            <Route path='/admin' element={<Admin/>}/> */}
+            <Route path='/register/customer' element={<RegisterCustomer/>}/>
+            <Route path='/register/pharmacy' element={<RegisterPharmacy/>}/>
+
+            <Route path='/pharmacy/dashboard' element={<PharmacyDashboard/>}/>
+            {/* <Route path='/admin' element={<Admin/>}/> */}
         </Routes>
     );
 }

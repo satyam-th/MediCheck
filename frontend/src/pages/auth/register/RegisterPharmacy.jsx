@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Rocket, CircleCheck, Users2 } from 'lucide-react';
 
-export default function Register() {
+export default function RegisterPharmacy() {
   const [formData, setFormData] = useState({
     pharmacyName: '',
     address: '',
