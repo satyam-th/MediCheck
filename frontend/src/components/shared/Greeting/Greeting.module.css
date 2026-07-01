@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 8px;
+}
+
+.greeting {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.date {
+    font-size: 15px;
+    color: #6B7280;
+}

@@ -7,6 +7,11 @@
     --border: #D1D5DB;
     --secondary:  #F97316;
     --secondary-hover: #C2410C;
+    --danger: #DC2626;
+    --danger-hover: #991B1B;
+    --success: #16A34A;
+    --warning: #F59E0B;
+    --warning-hover: #B45309;
     /* --footer-bg-color: #0F172A; */
 
     --font-main: "DM Sans", sans-serif;

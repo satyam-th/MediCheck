@@ -1,0 +1,46 @@
+.card {
+  background-color: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+
+.label {
+  font-size: 11px;
+  color: #6B7280;
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+.value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* accent bar colors */
+.bg-blue   { background-color: var(--primary); }
+.bg-orange { background-color: var(--secondary); }
+.bg-yellow { background-color: var(--warning); }
+.bg-red  { background-color: var(--danger); }
+.bg-green  { background-color: #16A34A; }
+
+
+
+/* value text colors */
+.text-blue   { color: var(--primary); }
+.text-orange { color: var(--secondary); }
+.text-yellow { color: var(--warning-hover); }
+.text-red { color: var(--danger-hover); }
+.text-green  { color: #16A34A; }
