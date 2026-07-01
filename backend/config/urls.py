@@ -18,10 +18,16 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from pharmacies.urls import admin_pharmacy_urlpatterns
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
        path('api/auth/', include('users.urls')),
        path('api/admin/catalog/', include('catalog.urls')),
+       path('api/pharmacy/',include('pharmacies.urls')),
+       path('api/admin/pharmacies/', include(admin_pharmacy_urlpatterns)),
+       path('api/',include('customers.urls'))
+       
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
