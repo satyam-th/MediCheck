@@ -18,7 +18,8 @@ export default function RegisterCustomer() {
     username: '',
     email: '',
     password: '',
-    phone: ''
+    phone: '',
+    confirmPassword: ''
   });
 
   const [errors, setErrors] = useState({
@@ -105,7 +106,7 @@ export default function RegisterCustomer() {
       newErrors.phone = 'Phone Number is required';
       isValid = false;
     } else if (!/^\+?[0-9]{10,15}$/.test(formData.phone)) {
-      newErrors.primaryContact = 'Please enter a valid phone number';
+      newErrors.phone = 'Please enter a valid phone number';
       isValid = false;
     }
 
