@@ -1,16 +1,31 @@
-import {Search, Menu, X} from 'lucide-react';
+import { Search } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './SearchBar.module.css'
 
-export default function SearchBar({size = "small", className=''}){
+export default function SearchBar({ size = "small", className = '' }) {
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
 
-    function handleSearch(e){
-        e.preventDefault();
+  const handleSearch = useCallback((e) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (q.length >= 2) {
+      navigate(`/search?q=${encodeURIComponent(q)}`);
     }
-    return(
-        <form className={`${styles.searchWrapper} ${styles[size]} ${className}`} onSubmit={handleSearch}>
-            <Search className={styles.searchIcon} />
-            <input type="search" placeholder="Search medicine (e.g., Paracetamol)" className={styles.searchMed}/>
-        </form>
-    );    
+  }, [query, navigate]);
+
+  return (
+    <form className={`${styles.searchWrapper} ${styles[size]} ${className}`} onSubmit={handleSearch}>
+      <Search className={styles.searchIcon} />
+      <input
+        type="search"
+        placeholder="Search medicine (e.g., Paracetamol)"
+        className={styles.searchMed}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+    </form>
+  );
 }

@@ -18,7 +18,7 @@ class MedicineSearchView(APIView):
     def get(self, request):
         query = request.query_params.get('q', '').strip()
 
-        if len(query) < 3:
+        if len(query) < 2:
             return Response([])
 
         medicines = GlobalMedicine.objects.filter(

@@ -1,8 +1,9 @@
 import {Toaster} from 'react-hot-toast'
+import { AuthProvider } from './context/AuthContext';
 import AppRoute from './routes/AppRoute';
 export default function App(){
   return(
-    <>
+    <AuthProvider>
     <Toaster position='top-center'
     toastOptions={{
           success: {
@@ -23,6 +24,6 @@ export default function App(){
             },
             }}}/>
     <AppRoute/>
-    </>
+    </AuthProvider>
   );
 }

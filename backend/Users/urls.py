@@ -1,13 +1,15 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView  # Built-in refresh view
 
-from .views import LoginView, RegisterView, MeView
+from .views import LoginView, RegisterView, RegisterPharmacyView, MeView
 
 urlpatterns = [
     #returns JWT tokens + user info
     path('login/', LoginView.as_view(), name='login'),
     #creates customer account
     path('register/', RegisterView.as_view(), name='register'),
+    #creates pharmacy account (pending approval)
+    path('register/pharmacy/', RegisterPharmacyView.as_view(), name='register-pharmacy'),
     #updates own info
     path('me/', MeView.as_view(), name='me'),
     # Refresh: new access token

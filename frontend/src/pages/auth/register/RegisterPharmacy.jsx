@@ -7,9 +7,9 @@ import Button from '../../../components/ui/Button/Button';
 import FormInput from '../../../components/ui/inputs/FormInput/FormInput';
 import FormDivider from '../../../components/ui/FormDivider/FormDivider';
 
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Rocket, CircleCheck, Users2 } from 'lucide-react';
+import api from '../../../services/api';
 
 export default function RegisterPharmacy() {
   const [formData, setFormData] = useState({
@@ -161,16 +161,29 @@ export default function RegisterPharmacy() {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    toast.success('Application Submitted. Please wait your account is being verified by the admin.')
-    setTimeout(() => {
-      navigate('/login');
-    }, 3000);
-    
-    console.log(formData);
+    try {
+      await api.post('/auth/register/pharmacy/', {
+        email: formData.email,
+        password: formData.password,
+        pharmacyName: formData.pharmacyName,
+        address: formData.address,
+        licenseNo: formData.licenseNo,
+        primaryContact: formData.primaryContact,
+        openTime: formData.openTime,
+        closeTime: formData.closeTime,
+      });
+      toast.success('Application submitted. Please wait for admin verification.');
+      setTimeout(() => navigate('/login'), 3000);
+    } catch (err) {
+      const msg = err.response?.data?.email?.[0]
+        || err.response?.data?.message
+        || 'Registration failed. Please try again.';
+      toast.error(msg);
+    }
   };
 
   return (

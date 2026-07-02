@@ -7,9 +7,9 @@ import Button from '../../../components/ui/Button/Button';
 import FormInput from '../../../components/ui/inputs/FormInput/FormInput';
 import FormDivider from '../../../components/ui/FormDivider/FormDivider';
 
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Clock} from 'lucide-react';
+import api from '../../../services/api';
 
 export default function RegisterCustomer() {
   const [formData, setFormData] = useState({
@@ -113,16 +113,27 @@ export default function RegisterCustomer() {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    toast.success('Registration successful.')
-    setTimeout(() => {
-      navigate('/login');
-    }, 1500);
-    
-    console.log(formData);
+    try {
+      await api.post('/auth/register/', {
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phone,
+      });
+      toast.success('Registration successful.');
+      setTimeout(() => navigate('/login'), 1500);
+    } catch (err) {
+      const msg = err.response?.data?.email?.[0]
+        || err.response?.data?.username?.[0]
+        || 'Registration failed. Please try again.';
+      toast.error(msg);
+    }
   };
 
   return (
@@ -133,7 +144,7 @@ export default function RegisterCustomer() {
     >
       <div className={styles.welcomeContent}>
         <p className={styles.welcomeText}>Create your account</p>
-        <p className={styles.welcomeSubtext}>Register your pharmacy and get started today</p>
+        <p className={styles.welcomeSubtext}>Create an account and start finding medicines near you</p>
       </div>
 
       <form className={styles.registerForm} onSubmit={handleSubmit}>

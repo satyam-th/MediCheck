@@ -5,10 +5,10 @@ import About from '../pages/user/About/About';
 import Login from '../pages/auth/login/Login';
 import RegisterCustomer from '../pages/auth/register/RegisterCustomer';
 import RegisterPharmacy from '../pages/auth/register/RegisterPharmacy';
+import SearchResults from '../pages/user/SearchResults/SearchResults';
 
 import PharmacyLayout from '../layout/PharmacyLayout/PharmacyLayout';
 import PharmacyDashboard from '../pages/pharmacy/Dashboard/Dashboard'
-// import Admin from '../pages/admin/Dashboard'
 
 export default function AppRoute(){
     return(
@@ -18,15 +18,12 @@ export default function AppRoute(){
             <Route path='/login' element={<Login/>}/>
             <Route path='/register/customer' element={<RegisterCustomer/>}/>
             <Route path='/register/pharmacy' element={<RegisterPharmacy/>}/>
+            <Route path='/search' element={<SearchResults />} />
 
             <Route path='/pharmacy' element={<PharmacyLayout />}>
+                <Route index element={<PharmacyDashboard />} />
                 <Route path='dashboard' element={<PharmacyDashboard />} />
-                {/* <Route path='medicines' element={<PharmacyMedicines />} />
-                <Route path='sales' element={<PharmacySales />} />
-                <Route path='low-stock' element={<PharmacyLowStock />} />
-                <Route path='profile' element={<PharmacyProfile />} /> */}
-      </Route>
-            {/* <Route path='/admin' element={<Admin/>}/> */}
+            </Route>
         </Routes>
     );
 }
