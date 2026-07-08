@@ -6,7 +6,8 @@ import RegisterCustomer from '../pages/auth/register/RegisterCustomer';
 import RegisterPharmacy from '../pages/auth/register/RegisterPharmacy';
 
 import PharmacyLayout from '../layout/PharmacyLayout/PharmacyLayout';
-import PharmacyDashboard from '../pages/pharmacy/Dashboard/Dashboard'
+import PharmacyDashboard from '../pages/pharmacy/Dashboard/Dashboard';
+import PharmacyMedicines from '../pages/pharmacy/Medicines/Medicines';
 // import Admin from '../pages/admin/Dashboard'
 
 export default function AppRoute(){
@@ -19,8 +20,8 @@ export default function AppRoute(){
 
             <Route path='/pharmacy' element={<PharmacyLayout />}>
                 <Route path='dashboard' element={<PharmacyDashboard />} />
-                {/* <Route path='medicines' element={<PharmacyMedicines />} />
-                <Route path='sales' element={<PharmacySales />} />
+                <Route path='medicines' element={<PharmacyMedicines />} />
+                {/* <Route path='sales' element={<PharmacySales />} />
                 <Route path='low-stock' element={<PharmacyLowStock />} />
                 <Route path='profile' element={<PharmacyProfile />} /> */}
       </Route>
