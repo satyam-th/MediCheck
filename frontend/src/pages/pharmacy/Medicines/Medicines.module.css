@@ -56,3 +56,38 @@
 .addBtn:hover {
   background: var(--primary-hover);
 }
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.cancelBtn {
+  flex: 1;
+  background: var(--shadow);
+  color: var(--text-color-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dangerBtn {
+  flex: 1;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dangerBtn:hover {
+  background: var(--danger-hover);
+}

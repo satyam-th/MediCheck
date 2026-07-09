@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 
 import InventoryTable from '../../../components/pharmacy/InventoryTable/InventoryTable';
 import MedicineFormModal from '../../../components/pharmacy/MedicineFormModal/MedicineFormModal';
+import Modal from '../../../components/ui/Modal/Modal';
 
 const medicineInventory = [];
 
@@ -11,9 +12,15 @@ export default function Medicine(){
   const[inventory, setInventory] = useState(medicineInventory);
   const[isModalOpen, setIsModalOpen] = useState(false);
   const[editingItem, setEditingItem] = useState(null); // null = Add mode, object = Edit mode
+  const[confirmingDelete, setConfirmingDelete] = useState(null);
 
   function handleDelete(item){
     setInventory((prev)=> prev.filter((med)=> med.id !== item.id) )
+  }
+
+  function handleConfirmDelete(){
+    setInventory((prev)=> prev.filter((med)=> med.id !== confirmingDelete.id) );
+    setConfirmingDelete(null);
   }
 
   function handleCancel(){
@@ -31,6 +38,10 @@ export default function Medicine(){
     setIsModalOpen(false);
     setEditingItem(null);
   };
+
+  function handleDeleteClick(item){
+    setConfirmingDelete(item);
+  }
 
     return(
     <div className={styles.page}>
@@ -55,10 +66,20 @@ export default function Medicine(){
         onSubmit={handleFormSubmit}
         initialData={editingItem}
       />
+
+      {/* delete confirmation modal */}
+      <Modal isOpen={!!confirmingDelete} onClose={()=> setConfirmingDelete(null)} title="Delete medicine?">
+        <p>Are you sure you want to delete <strong>{confirmingDelete?.name}</strong>? This can't be undone.</p>
+        <div className={styles.modalActions}>
+          <button className={styles.cancelBtn} onClick={() => setConfirmingDelete(null)}>Cancel</button>
+          <button className={styles.dangerBtn} onClick={handleConfirmDelete}>Delete</button>
+        </div>
+      </Modal>
+
       <section>
         <InventoryTable items={inventory} 
         onEdit={(item)=> {setEditingItem(item); setIsModalOpen(true);}} 
-        onDelete={handleDelete}/>
+        onDelete={handleDeleteClick}/>
       </section>
     </div>
     );
