@@ -91,3 +91,15 @@
 .dangerBtn:hover {
   background: var(--danger-hover);
 }
+
+/* empty medicine state */
+.emptyState {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}

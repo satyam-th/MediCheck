@@ -73,9 +73,16 @@ export default function Medicine(){
       </Modal>
 
       <section>
-        <InventoryTable items={inventory} 
-        onEdit={(item)=> {setEditingItem(item); setIsModalOpen(true);}} 
-        onDelete={handleDeleteClick}/>
+        {inventory.length === 0 ? (
+          <div className={styles.emptyState}>
+              <p>No medicines in your inventory yet.</p>
+              <p>Click <strong>Add Medicine</strong> to get started.</p>
+          </div>
+        ):(
+          <InventoryTable items={inventory} 
+          onEdit={(item)=> {setEditingItem(item); setIsModalOpen(true);}} 
+          onDelete={handleDeleteClick}/>
+        )}
       </section>
     </div>
     );
