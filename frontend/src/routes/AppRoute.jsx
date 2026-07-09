@@ -8,7 +8,9 @@ import RegisterPharmacy from '../pages/auth/register/RegisterPharmacy';
 import PharmacyLayout from '../layout/PharmacyLayout/PharmacyLayout';
 import PharmacyDashboard from '../pages/pharmacy/Dashboard/Dashboard';
 import PharmacyMedicines from '../pages/pharmacy/Medicines/Medicines';
-// import Admin from '../pages/admin/Dashboard'
+
+import AdminLayout from '../layout/AdminLayout/AdminLayout';
+import AdminDashboard from '../pages/admin/Dashboard/Dashboard';
 
 export default function AppRoute(){
     return(
@@ -18,14 +20,19 @@ export default function AppRoute(){
             <Route path='/register/customer' element={<RegisterCustomer/>}/>
             <Route path='/register/pharmacy' element={<RegisterPharmacy/>}/>
 
+            {/* pharmacy */}
             <Route path='/pharmacy' element={<PharmacyLayout />}>
                 <Route path='dashboard' element={<PharmacyDashboard />} />
                 <Route path='medicines' element={<PharmacyMedicines />} />
                 {/* <Route path='sales' element={<PharmacySales />} />
                 <Route path='low-stock' element={<PharmacyLowStock />} />
                 <Route path='profile' element={<PharmacyProfile />} /> */}
-      </Route>
-            {/* <Route path='/admin' element={<Admin/>}/> */}
+            </Route>
+            
+            {/* admin */}
+            <Route path='/admin' element={<AdminLayout/>}>
+                <Route path='dashboard' element={<AdminDashboard/>} />
+            </Route>
         </Routes>
     );
 }
