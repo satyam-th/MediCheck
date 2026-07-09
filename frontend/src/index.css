@@ -14,6 +14,13 @@
     --warning-hover: #B45309;
     /* --footer-bg-color: #0F172A; */
 
+    --danger-bg: #FCEAEA;
+    --danger-text: #791F1F;
+    --warning-bg: #FEF6E7;
+    --warning-text: #854F0B;
+    --success-bg: #EAF6EC;
+    --success-text: #14532D;
+
     --font-main: "DM Sans", sans-serif;
 }
 

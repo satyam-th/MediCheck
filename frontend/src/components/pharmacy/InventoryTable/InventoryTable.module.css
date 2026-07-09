@@ -40,3 +40,20 @@
 .iconBtn:hover {
   color: var(--primary);
 }
+
+/* badges */
+.badgeWarning {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.badgeDanger {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
