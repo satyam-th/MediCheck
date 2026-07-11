@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.db import transaction   # For atomic sale creation
 
 from .models import Pharmacy, LocalInventory, Sale, SaleItem, Patient, StaffAttendance
+from catalog.models import GlobalMedicine
 
 class PharmacySerializer(serializers.ModelSerializer):
 
@@ -48,6 +49,11 @@ class InventorySerializer(serializers.ModelSerializer):
 
     stock_status = serializers.ReadOnlyField()
 
+    # Write-only fields for creating new medicine requests
+    new_medicine_name = serializers.CharField(write_only=True, required=False)
+    new_generic_name = serializers.CharField(write_only=True, required=False, allow_blank=True)
+    new_category = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
     class Meta:
         model  = LocalInventory
         fields = [
@@ -64,8 +70,42 @@ class InventorySerializer(serializers.ModelSerializer):
             'expiry_date',
             'stock_status',     # Auto calculated
             'updated_at',
+            'new_medicine_name',
+            'new_generic_name',
+            'new_category',
         ]
         read_only_fields = ['id', 'updated_at']
+
+    def validate(self, data):
+        medicine_id = data.get('medicine')
+        new_medicine_name = data.get('new_medicine_name')
+
+        if not medicine_id and not new_medicine_name:
+            raise serializers.ValidationError(
+                "Either 'medicine' (existing ID) or 'new_medicine_name' is required."
+            )
+        if medicine_id and new_medicine_name:
+            raise serializers.ValidationError(
+                "Provide either 'medicine' or 'new_medicine_name', not both."
+            )
+        return data
+
+    def create(self, validated_data):
+        new_medicine_name = validated_data.pop('new_medicine_name', None)
+        new_generic_name = validated_data.pop('new_generic_name', '')
+        new_category = validated_data.pop('new_category', '')
+
+        if new_medicine_name:
+            medicine = GlobalMedicine.objects.create(
+                name=new_medicine_name,
+                generic_name=new_generic_name,
+                category=new_category,
+                approval_status='pending',
+                submitted_by=self.context['request'].user,
+            )
+            validated_data['medicine'] = medicine
+
+        return super().create(validated_data)
 
 
 class CustomerStockSerializer(serializers.ModelSerializer):

@@ -4,16 +4,22 @@ from .models import GlobalMedicine
 
 
 class MedicineAdminSerializer(serializers.ModelSerializer):
+    submitted_by_email = serializers.SerializerMethodField()
+
     class Meta:
         model  = GlobalMedicine
         fields = [
             'id', 'name', 'generic_name', 'composition',
             'side_effects', 'manufacturer', 'category',
             'requires_prescription', 'photo',
-            'approval_status', 'created_at'
+            'approval_status', 'submitted_by', 'submitted_by_email', 'created_at'
         ]
         read_only_fields = ['id', 'created_at']
-        # id and created_at are auto generated 
+
+    def get_submitted_by_email(self, obj):
+        if obj.submitted_by:
+            return obj.submitted_by.email
+        return None
 
 
 class MedicinePublicSerializer(serializers.ModelSerializer):

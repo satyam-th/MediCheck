@@ -3,13 +3,14 @@ import styles from './InventoryTable.module.css';
 import {Pencil, Trash2} from 'lucide-react';
 
 function getExpiryStatus(expiryDate){
+    if (!expiryDate) return 'ok';
     const daysLeft = (new Date(expiryDate) - new Date()) / (1000 * 60 * 60 * 24);
     if (daysLeft < 0) return 'expired';
     if(daysLeft < 60) return 'expiring-soon';
     return 'ok';
 }
 
-export default function InventoryTable({items=[], onEdit,  onDelete}){
+export default function InventoryTable({items=[], onEdit, onDelete}){
     return (
         <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -26,21 +27,21 @@ export default function InventoryTable({items=[], onEdit,  onDelete}){
 
                 <tbody>
                     {items.map((item)=>{
-                        const isLowStock = item.quantity < 10;
-                        const expiryStatus = getExpiryStatus(item.expiry);
+                        const isLowStock = item.stock_status === 'low_stock' || item.stock_status === 'out_of_stock';
+                        const expiryStatus = getExpiryStatus(item.expiry_date);
 
                         return(
                         <tr key={item.id}>
-                            <td>{item.name}</td>
+                            <td>{item.medicine_name}</td>
                             <td>
                                 {isLowStock ? (<span className={styles.badgeWarning}>{item.quantity}</span>) : (item.quantity)}
                             </td>
                             <td>{item.mrp}</td>
-                            <td>{item.batchNo}</td>
+                            <td>{item.batch_number}</td>
                             <td>
-                                {expiryStatus === 'expired' ? ( <span className={styles.badgeDanger}>{item.expiry}</span> )
-                                : expiryStatus === 'expiring-soon' ? ( <span className={styles.badgeWarning}>{item.expiry}</span> )
-                                : (item.expiry)}
+                                {expiryStatus === 'expired' ? ( <span className={styles.badgeDanger}>{item.expiry_date}</span> )
+                                : expiryStatus === 'expiring-soon' ? ( <span className={styles.badgeWarning}>{item.expiry_date}</span> )
+                                : (item.expiry_date)}
                                 
                                 </td>
                             <td className={styles.actionCol}>

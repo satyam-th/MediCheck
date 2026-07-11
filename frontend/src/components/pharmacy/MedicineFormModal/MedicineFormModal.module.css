@@ -65,3 +65,51 @@
   color: var(--danger);
   margin-top: 2px;
 }
+
+.modeToggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.modeBtn,
+.modeBtnActive {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  background: var(--shadow);
+  color: var(--text-color-secondary);
+  transition: all 0.15s ease;
+}
+
+.modeBtnActive {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 500;
+}
+
+.modeBtn:hover:not(.modeBtnActive) {
+  background: var(--border);
+}
+
+.field select {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--font-main);
+  color: var(--text-color-primary);
+  background: #fff;
+}
+
+.field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.12);
+}

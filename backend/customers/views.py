@@ -1,14 +1,15 @@
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from django.db.models import Q  # For combining filter conditions with OR
 
+from users.models import User
 from catalog.models import GlobalMedicine
 from catalog.serializers import MedicinePublicSerializer
 from pharmacies.models import Pharmacy, LocalInventory
-from pharmacies.serializers import CustomerStockSerializer, PharmacyPublicSerializer
+from pharmacies.serializers import CustomerStockSerializer, PharmacyPublicSerializer, PharmacySerializer
 
 class MedicineSearchView(APIView):
 
@@ -85,3 +86,16 @@ class NearbyPharmaciesView(APIView):
 
         serializer = PharmacyPublicSerializer(pharmacies, many=True)
         return Response(serializer.data)
+
+
+class AdminStatsView(APIView):
+    """Return platform stats for admin dashboard."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({
+            'total_customers': User.objects.filter(role='customer').count(),
+            'total_pharmacies': Pharmacy.objects.count(),
+            'total_medicines': GlobalMedicine.objects.filter(approval_status='approved').count(),
+        })

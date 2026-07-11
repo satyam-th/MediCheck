@@ -39,3 +39,79 @@
   padding: 20px;
   min-height: 300px;
 }
+
+/* ── Pending Requests ── */
+.pendingList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pendingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+}
+
+.pendingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pendingName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.pendingMeta {
+  font-size: 11px;
+  color: #6B7280;
+}
+
+.pendingActions {
+  display: flex;
+  gap: 6px;
+}
+
+.approveBtn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-family: var(--font-main);
+  background: #10B981;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.approveBtn:hover {
+  background: #059669;
+}
+
+.rejectBtn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-family: var(--font-main);
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.rejectBtn:hover {
+  background: #DC2626;
+}
+
+.emptyText {
+  font-size: 13px;
+  color: #9CA3AF;
+  text-align: center;
+  padding: 20px;
+}

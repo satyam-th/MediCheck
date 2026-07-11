@@ -11,6 +11,8 @@ from .views import (
     AdminPharmacyViewSet,
 )
 
+from catalog.views import ApprovedMedicinesView
+
 #pharmacy dashboard.
 
 pharmacy_router = DefaultRouter()
@@ -26,6 +28,7 @@ admin_router.register('', AdminPharmacyViewSet, basename='admin-pharmacies')
 urlpatterns = [
 
     path('profile/', PharmacyProfileView.as_view(), name='pharmacy-profile'),
+    path('catalog/', ApprovedMedicinesView.as_view(), name='pharmacy-catalog'),
 
     path('', include(pharmacy_router.urls)),
 ]

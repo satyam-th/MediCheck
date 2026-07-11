@@ -14,6 +14,8 @@ import PharmacyMedicines from '../pages/pharmacy/Medicines/Medicines';
 import AdminLayout from '../layout/AdminLayout/AdminLayout';
 import AdminDashboard from '../pages/admin/Dashboard/Dashboard';
 
+import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
+
 export default function AppRoute(){
     return(
         <Routes>
@@ -25,17 +27,22 @@ export default function AppRoute(){
             <Route path='/search' element={<SearchResults />} />
 
             {/* pharmacy */}
-            <Route path='/pharmacy' element={<PharmacyLayout />}>
+            <Route path='/pharmacy' element={
+                <ProtectedRoute allowedRoles={['pharmacy']}>
+                    <PharmacyLayout />
+                </ProtectedRoute>
+            }>
                 <Route index element={<PharmacyDashboard />} />
                 <Route path='dashboard' element={<PharmacyDashboard />} />
                 <Route path='medicines' element={<PharmacyMedicines />} />
-                {/* <Route path='sales' element={<PharmacySales />} />
-                <Route path='low-stock' element={<PharmacyLowStock />} />
-                <Route path='profile' element={<PharmacyProfile />} /> */}
             </Route>
             
             {/* admin */}
-            <Route path='/admin' element={<AdminLayout/>}>
+            <Route path='/admin' element={
+                <ProtectedRoute allowedRoles={['worker_admin', 'super_admin']}>
+                    <AdminLayout/>
+                </ProtectedRoute>
+            }>
                 <Route path='dashboard' element={<AdminDashboard/>} />
             </Route>
         </Routes>
