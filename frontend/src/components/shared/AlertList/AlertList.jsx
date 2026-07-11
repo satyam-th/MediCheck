@@ -9,7 +9,7 @@ export default function AlertList({items = []}){
 
             <div className={styles.list}>
                 {items.map((item)=>(
-                    <div key={item} className={styles.row}>
+                    <div key={item.id} className={styles.row}>
                         <div className={styles.info}>
                             <span className={styles.medicine}>{item.medicine}</span>
                             <span className={styles.quantity}>{item.quantity} units left</span>

@@ -19,7 +19,7 @@ export default function Footer(){
                 <p className={styles.colHeading}>Quick Links</p>
                 <ul className={styles.linksList}>
                     <li><Link to='/' className={styles.footerLink}>Home</Link></li>
-                    <li><Link to='/about' className={styles.footerLink}>About Us</Link></li>
+                    <li><Link to='/about' className={styles.footerLink}>About</Link></li>
                     <li><Link to='/pharmacies' className={styles.footerLink}>Pharmacies</Link></li>
                 </ul>
             </div>

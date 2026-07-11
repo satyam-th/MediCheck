@@ -1,16 +1,20 @@
 import styles from './Login.module.css'
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import AuthLayout from "../../../components/layout/AuthLayout/AuthLayout";
 import Button from '../../../components/ui/Button/Button';
 import FormInput from '../../../components/ui/inputs/FormInput/FormInput';
 import FormDivider from '../../../components/ui/FormDivider/FormDivider';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { ShieldCheck, ShoppingCart, MapPin } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function Login(){
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({email: '', password: '', rememberMe: false});
     const [errors, setErrors] = useState({email: '', password: ''});
 
@@ -52,11 +56,24 @@ export default function Login(){
         return isValid;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      if (!validate()) return; // stops here if validation fails
+      if (!validate()) return;
 
-      console.log(formData);
+      try {
+        const user = await login(formData.email, formData.password);
+        toast.success(`Welcome back, ${user.first_name || user.username}!`);
+        if (user.role === 'pharmacy') {
+          navigate('/pharmacy/dashboard');
+        } else if (user.role === 'worker_admin' || user.role === 'super_admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      } catch (err) {
+        const detail = err.response?.data?.detail || 'Invalid email or password.';
+        toast.error(detail);
+      }
     };
     return (
         <AuthLayout tagline="Behind every prescription, there's a team making it happen." subtext="Your medicheck platform for efficient pharmacy operation and administrative control." features={features}>
