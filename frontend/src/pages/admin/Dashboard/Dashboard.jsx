@@ -1,6 +1,7 @@
 import StatCard from '../../../components/ui/StatCard/StatCard'
 import Greeting from '../../../components/shared/Greeting/Greeting';
 import RecentPharmacies from '../../../components/shared/RecentPharmacies/RecentPharmacies';
+import RecentMedicines from '../../../components/shared/RecentMedicines/RecentMedicines';
 
 import styles from './Dashboard.module.css';
 
@@ -9,6 +10,13 @@ const dummyPharmacies = [
   { id: 2, name: 'HealthPlus Pharmacy', owner: 'Sabina Gurung', location: 'Lalitpur', dateAdded: 'Jul 6, 2026' },
   { id: 3, name: 'City Care Pharmacy', owner: 'Bikash Thapa', location: 'Bhaktapur', dateAdded: 'Jul 3, 2026' },
   { id: 4, name: 'Green Cross Pharmacy', owner: 'Anita Rai', location: 'Kathmandu', dateAdded: 'Jun 30, 2026' },
+]
+
+const dummyMedicines = [
+  { id: 1, name: 'Paracetamol 500mg', category: 'Painkiller', dateAdded: 'Jul 9, 2026' },
+  { id: 2, name: 'Amoxicillin 250mg', category: 'Antibiotic', dateAdded: 'Jul 7, 2026' },
+  { id: 3, name: 'Cetirizine 10mg', category: 'Antihistamine', dateAdded: 'Jul 5, 2026' },
+  { id: 4, name: 'Insulin Glargine', category: 'Hormone', dateAdded: 'Jul 2, 2026' },
 ]
 
 export default function Dashboard() {
@@ -32,17 +40,9 @@ export default function Dashboard() {
         <h2 className={styles.sectionTitle}>Activity</h2>
         <div className={styles.activityGrid}>
           <RecentPharmacies pharmacies={dummyPharmacies} />
+          <RecentMedicines medicines={dummyMedicines} />
         </div>
       </section>
-
-      {/* Section 2 — Sales Summary */}
-      {/* <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Sales Summary</h2>
-        <div className={styles.statGrid}>
-          <StatCard label="Today's Sales" value={24} color="blue" />
-          <StatCard label="Today's Revenue" value="Rs. 12,400" color="green" />
-        </div>
-      </section> */}
 
     </div>
   );
