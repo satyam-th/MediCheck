@@ -31,3 +31,29 @@
   text-align: right;
   margin: 0 0 8px;
 }
+
+.statusSelect {
+  outline: none;
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.active {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.suspended {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.banned {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
