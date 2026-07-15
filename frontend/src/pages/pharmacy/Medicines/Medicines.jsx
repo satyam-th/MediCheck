@@ -12,7 +12,7 @@ export default function Medicine(){
   const[inventory, setInventory] = useState(medicineInventory);
   const[isModalOpen, setIsModalOpen] = useState(false);
   const[editingItem, setEditingItem] = useState(null); // null = Add mode, object = Edit mode
-  const[confirmingDelete, setConfirmingDelete] = useState(null);
+  const[confirmingDelete, setConfirmingDelete] = useState(null); // null=no confirm, object=confirming
 
   function handleConfirmDelete(){
     setInventory((prev)=> prev.filter((med)=> med.id !== confirmingDelete.id) );

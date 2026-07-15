@@ -13,6 +13,7 @@ import PharmacyMedicines from '../pages/pharmacy/Medicines/Medicines';
 
 import AdminLayout from '../layout/AdminLayout/AdminLayout';
 import AdminDashboard from '../pages/admin/Dashboard/Dashboard';
+import AdminPharmacy from '../pages/admin/Pharmacy/Pharmacy';
 
 export default function AppRoute(){
     return(
@@ -37,6 +38,7 @@ export default function AppRoute(){
             {/* admin */}
             <Route path='/admin' element={<AdminLayout/>}>
                 <Route path='dashboard' element={<AdminDashboard/>} />
+                <Route path='pharmacy' element={<AdminPharmacy/>} />
             </Route>
         </Routes>
     );
