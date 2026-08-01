@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import {LayoutDashboard, Cross, Pill, User, UserCircle} from 'lucide-react';
+import {LayoutDashboard, Cross, Pill, User, CircleUser, UserCircle} from 'lucide-react';
 
 import SideBar from "../../components/shared/SideBar/SideBar";
 
@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Pharmacy', path: '/admin/pharmacy', icon: Cross },
   { label: 'Medicines', path: '/admin/medicines', icon: Pill },
   { label: 'Customer', path: '/admin/customer', icon: User },
+  { label: 'Profile', path: '/admin/profile', icon: CircleUser }
 ];
 
 export default function AdminLayout(){

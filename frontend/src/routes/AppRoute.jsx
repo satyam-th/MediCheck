@@ -16,6 +16,7 @@ import AdminDashboard from '../pages/admin/Dashboard/Dashboard';
 import AdminPharmacy from '../pages/admin/Pharmacy/Pharmacy';
 import AdminMedicines from '../pages/admin/Medicines/Medicines';
 import AdminCustomer from '../pages/admin/Customer/Customer';
+import AdminProfile from '../pages/admin/Profile/Profile';
 
 export default function AppRoute(){
     return(
@@ -43,6 +44,7 @@ export default function AppRoute(){
                 <Route path='pharmacy' element={<AdminPharmacy/>} />
                 <Route path='medicines' element={<AdminMedicines/>}/>
                 <Route path='customer' element={<AdminCustomer/>}/>
+                <Route path='profile' element={<AdminProfile/>}/>
             </Route>
         </Routes>
     );
