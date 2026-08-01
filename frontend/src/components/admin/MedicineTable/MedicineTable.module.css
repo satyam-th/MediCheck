@@ -31,3 +31,19 @@
   text-align: right;
   margin: 0 0 8px;
 }
+
+.actionCol {
+  white-space: nowrap;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-secondary);
+  padding: 4px;
+}
+
+.iconBtn:hover {
+  color: var(--primary);
+}

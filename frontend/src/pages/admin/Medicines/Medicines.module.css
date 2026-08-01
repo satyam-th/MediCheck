@@ -30,3 +30,66 @@
   flex-direction: column;
   gap: 14px;
 }
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 16px;
+
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.addBtn:hover {
+  background: var(--primary-hover);
+}
+
+.confirmText {
+  font-size: 13px;
+  color: var(--text-color-secondary);
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.cancelBtn {
+  flex: 1;
+  background: var(--shadow);
+  color: var(--text-color-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dangerBtn {
+  flex: 1;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dangerBtn:hover {
+  background: var(--danger-hover);
+}
