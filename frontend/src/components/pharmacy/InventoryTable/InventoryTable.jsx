@@ -10,6 +10,7 @@ function getExpiryStatus(expiryDate){
 }
 
 export default function InventoryTable({items=[], onEdit,  onDelete}){
+    const showActions = onEdit && onDelete; //only show Action column if both handlers exist
     return (
         <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -20,7 +21,7 @@ export default function InventoryTable({items=[], onEdit,  onDelete}){
                         <th>MRP</th>
                         <th>Batch no.</th>
                         <th>Expiry</th>
-                        <th>Action</th>
+                        {showActions && <th>Action</th>}
                     </tr>
                 </thead>
 
@@ -43,10 +44,13 @@ export default function InventoryTable({items=[], onEdit,  onDelete}){
                                 : (item.expiry)}
                                 
                                 </td>
+                            
+                            {showActions && (
                             <td className={styles.actionCol}>
                                 <button className={styles.iconBtn} onClick={()=>onEdit(item)} aria-label='Edit'><Pencil size={16}/></button>
                                 <button className={styles.iconBtn} onClick={()=>onDelete(item)} aria-label='Delete'><Trash2 size={16}/></button>
                             </td>
+                            )}
                         </tr>
                         )
                     })}

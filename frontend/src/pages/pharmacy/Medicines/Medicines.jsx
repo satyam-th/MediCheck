@@ -1,21 +1,21 @@
 import styles from './Medicines.module.css';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 
 import InventoryTable from '../../../components/pharmacy/InventoryTable/InventoryTable';
 import MedicineFormModal from '../../../components/pharmacy/MedicineFormModal/MedicineFormModal';
 import Modal from '../../../components/ui/Modal/Modal';
 
-const medicineInventory = [];
 
-export default function Medicine(){
-  const[inventory, setInventory] = useState(medicineInventory);
+export default function Medicines(){
+  const { inventory, handleFormSubmit: onSubmitFromLayout, handleConfirmDelete: onDeleteFromLayout } = useOutletContext();
   const[isModalOpen, setIsModalOpen] = useState(false);
   const[editingItem, setEditingItem] = useState(null); // null = Add mode, object = Edit mode
   const[confirmingDelete, setConfirmingDelete] = useState(null); // null=no confirm, object=confirming
 
-  function handleConfirmDelete(){
-    setInventory((prev)=> prev.filter((med)=> med.id !== confirmingDelete.id) );
+  function onConfirmDelete(){
+    onDeleteFromLayout(confirmingDelete.id);
     setConfirmingDelete(null);
   }
 
@@ -24,13 +24,8 @@ export default function Medicine(){
     setEditingItem(null);
   }
 
-  function handleFormSubmit(formData) {
-    if(editingItem){
-      setInventory((prev) => prev.map((med)=> (med.id === formData.id ? formData : med)));
-    }else{
-      setInventory((prev)=> [...prev, formData])
-    }
-
+  function onFormSubmit(formData) {
+    onSubmitFromLayout(formData, editingItem);
     setIsModalOpen(false);
     setEditingItem(null);
   };
@@ -59,7 +54,7 @@ export default function Medicine(){
         <MedicineFormModal 
         isOpen={isModalOpen}
         onClose={()=> {setIsModalOpen(false); setEditingItem(null);}}
-        onSubmit={handleFormSubmit}
+        onSubmit={onFormSubmit}
         initialData={editingItem}
       />
 
@@ -68,7 +63,7 @@ export default function Medicine(){
         <p>Are you sure you want to delete <strong>{confirmingDelete?.name}</strong>? This can't be undone.</p>
         <div className={styles.modalActions}>
           <button className={styles.cancelBtn} onClick={() => setConfirmingDelete(null)}>Cancel</button>
-          <button className={styles.dangerBtn} onClick={handleConfirmDelete}>Delete</button>
+          <button className={styles.dangerBtn} onClick={onConfirmDelete}>Delete</button>
         </div>
       </Modal>
 
