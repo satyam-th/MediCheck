@@ -1,0 +1,49 @@
+.tableWrapper {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: var(--font-main);
+}
+
+.table th {
+  text-align: left;
+  padding: 10px 14px;
+  color: var(--text-color-secondary);
+  background: var(--shadow);
+}
+
+.table td {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.count {
+  font-size: 13px;
+  color: var(--text-color-secondary);
+  text-align: right;
+  margin: 0 0 8px;
+}
+
+.actionCol {
+  white-space: nowrap;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-secondary);
+  padding: 4px;
+}
+
+.iconBtn:hover {
+  color: var(--primary);
+}

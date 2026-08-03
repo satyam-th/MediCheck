@@ -1,41 +1,21 @@
 import styles from './Medicines.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 
 import InventoryTable from '../../../components/pharmacy/InventoryTable/InventoryTable';
 import MedicineFormModal from '../../../components/pharmacy/MedicineFormModal/MedicineFormModal';
 import Modal from '../../../components/ui/Modal/Modal';
-import api from '../../../services/api';
 
-export default function Medicine(){
-  const[inventory, setInventory] = useState([]);
+
+export default function Medicines(){
+  const { inventory, handleFormSubmit: onSubmitFromLayout, handleConfirmDelete: onDeleteFromLayout } = useOutletContext();
   const[isModalOpen, setIsModalOpen] = useState(false);
-  const[editingItem, setEditingItem] = useState(null);
-  const[confirmingDelete, setConfirmingDelete] = useState(null);
-  const[loading, setLoading] = useState(true);
+  const[editingItem, setEditingItem] = useState(null); // null = Add mode, object = Edit mode
+  const[confirmingDelete, setConfirmingDelete] = useState(null); // null=no confirm, object=confirming
 
-  useEffect(() => {
-    fetchInventory();
-  }, []);
-
-  async function fetchInventory() {
-    try {
-      const res = await api.get('/pharmacy/inventory/');
-      setInventory(res.data.results || res.data || []);
-    } catch {
-      setInventory([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleConfirmDelete(){
-    try {
-      await api.delete(`/pharmacy/inventory/${confirmingDelete.id}/`);
-      setInventory((prev) => prev.filter((med) => med.id !== confirmingDelete.id));
-    } catch {
-      // silently fail
-    }
+  function onConfirmDelete(){
+    onDeleteFromLayout(confirmingDelete.id);
     setConfirmingDelete(null);
   }
 
@@ -44,21 +24,11 @@ export default function Medicine(){
     setEditingItem(null);
   }
 
-  async function handleFormSubmit(formData) {
-    try {
-      if (editingItem) {
-        const res = await api.patch(`/pharmacy/inventory/${editingItem.id}/`, formData);
-        setInventory((prev) => prev.map((med) => (med.id === res.data.id ? res.data : med)));
-      } else {
-        const res = await api.post('/pharmacy/inventory/', formData);
-        setInventory((prev) => [...prev, res.data]);
-      }
-    } catch {
-      // silently fail
-    }
+  function onFormSubmit(formData) {
+    onSubmitFromLayout(formData, editingItem);
     setIsModalOpen(false);
     setEditingItem(null);
-  }
+  };
 
   function handleDeleteClick(item){
     setConfirmingDelete(item);
@@ -84,25 +54,21 @@ export default function Medicine(){
         <MedicineFormModal 
         isOpen={isModalOpen}
         onClose={()=> {setIsModalOpen(false); setEditingItem(null);}}
-        onSubmit={handleFormSubmit}
+        onSubmit={onFormSubmit}
         initialData={editingItem}
       />
 
       {/* delete confirmation modal */}
       <Modal isOpen={!!confirmingDelete} onClose={()=> setConfirmingDelete(null)} title="Delete medicine?">
-        <p>Are you sure you want to delete <strong>{confirmingDelete?.medicine_name}</strong>? This can't be undone.</p>
+        <p>Are you sure you want to delete <strong>{confirmingDelete?.name}</strong>? This can't be undone.</p>
         <div className={styles.modalActions}>
           <button className={styles.cancelBtn} onClick={() => setConfirmingDelete(null)}>Cancel</button>
-          <button className={styles.dangerBtn} onClick={handleConfirmDelete}>Delete</button>
+          <button className={styles.dangerBtn} onClick={onConfirmDelete}>Delete</button>
         </div>
       </Modal>
 
       <section>
-        {loading ? (
-          <div className={styles.emptyState}>
-              <p>Loading inventory...</p>
-          </div>
-        ) : inventory.length === 0 ? (
+        {inventory.length === 0 ? (
           <div className={styles.emptyState}>
               <p>No medicines in your inventory yet.</p>
               <p>Click <strong>Add Medicine</strong> to get started.</p>

@@ -1,4 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
+import { useState } from "react";  //  hold inventory here 
 
 import {LayoutDashboard, Pill, Wallet, AlertTriangle, UserCircle} from 'lucide-react';
 
@@ -15,20 +16,41 @@ const navItems = [
   { label: 'Profile', path: '/pharmacy/profile', icon: UserCircle },
 ];
 
+//moved here from Medicine.jsx, so both Medicines page and Low Stock page can access it
+const medicineInventory = [];
+
 export default function PharmacyLayout(){
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    //inventory state, moved here from Medicine.jsx
+    const [inventory, setInventory] = useState(medicineInventory);
 
     const handleLogout = () => {
         logout();
         navigate('/');
     };
 
+    // ADDED: same submit logic as Medicine.jsx's handleFormSubmit, moved here
+    function handleFormSubmit(formData, editingItem){
+        if(editingItem){
+            setInventory((prev) => prev.map((med)=> (med.id === formData.id ? formData : med)));
+        } else {
+            setInventory((prev)=> [...prev, formData]);
+        }
+    }
+
+    // Medicine.jsx's handleConfirmDelete, moved here
+    function handleConfirmDelete(id){
+        setInventory((prev)=> prev.filter((med)=> med.id !== id));
+    }
+
     return(
         <div className={styles.wrapper}>
             <SideBar brandname='medicheck' navItems={navItems} userName={user?.name || "Owner"} onLogout={handleLogout}/>
             <div className={styles.main}>
-                <Outlet/>
+                {/* ADDED: context prop, so child pages can read inventory + handlers via useOutletContext() */}
+                <Outlet context={{ inventory, handleFormSubmit, handleConfirmDelete }}/>
             </div>
         </div>
     );
