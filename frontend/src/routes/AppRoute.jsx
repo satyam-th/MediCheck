@@ -10,6 +10,7 @@ import SearchResults from '../pages/user/SearchResults/SearchResults';
 import PharmacyLayout from '../layout/PharmacyLayout/PharmacyLayout';
 import PharmacyDashboard from '../pages/pharmacy/Dashboard/Dashboard';
 import PharmacyMedicines from '../pages/pharmacy/Medicines/Medicines';
+import PharmacySales from '../pages/pharmacy/Sales/Sales';
 import PharmacyLowStock from '../pages/pharmacy/LowStock/LowStock';
 import PharmacyProfile from '../pages/pharmacy/Profile/Profile';
 
@@ -35,7 +36,7 @@ export default function AppRoute(){
                 <Route index element={<PharmacyDashboard />} />
                 <Route path='dashboard' element={<PharmacyDashboard />} />
                 <Route path='medicines' element={<PharmacyMedicines />} />
-                {/* <Route path='sales' element={<PharmacySales />} /> */}
+                <Route path='sales' element={<PharmacySales />} />
                 <Route path='low-stock' element={<PharmacyLowStock />} />
                 <Route path='profile' element={<PharmacyProfile />} />
             </Route>
