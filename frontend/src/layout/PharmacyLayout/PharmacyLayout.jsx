@@ -69,11 +69,24 @@ export default function PharmacyLayout(){
         }
     }
 
+    function handleCompleteSale(cartItems){
+    setInventory((prev) => 
+        prev.map((med) => {
+            const soldItem = cartItems.find((c) => c.id === med.id);
+            if(soldItem){
+                return { ...med, quantity: med.quantity - soldItem.quantity };
+            }
+            return med;
+        })
+    );
+}
+
     return(
         <div className={styles.wrapper}>
             <SideBar brandname='medicheck' navItems={navItems} userName={user?.name || "Owner"} onLogout={handleLogout}/>
             <div className={styles.main}>
-                <Outlet context={{ inventory, loading, handleFormSubmit, handleConfirmDelete }}/>
+                {/* context: child pages read inventory + handlers via useOutletContext() */}
+                <Outlet context={{ inventory, loading, handleFormSubmit, handleConfirmDelete, handleCompleteSale}}/>
             </div>
         </div>
     );
