@@ -83,7 +83,7 @@ class LocalInventory(models.Model):
     updated_at   = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('pharmacy', 'medicine')
+        unique_together = ('pharmacy', 'medicine', 'batch_number')
 
     def __str__(self):
         return f"{self.pharmacy.name} → {self.medicine.name} (qty: {self.quantity})"

@@ -5,7 +5,7 @@ import AlertList from '../../../components/shared/AlertList/AlertList';
 import Greeting from '../../../components/shared/Greeting/Greeting';
 
 import styles from './Dashboard.module.css'
-import api from '../../../services/api';
+import api, { fetchAllPages } from '../../../services/api';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function Dashboard() {
@@ -18,27 +18,34 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [invRes, lowRes, summaryRes, salesRes] = await Promise.all([
-          api.get('/pharmacy/inventory/'),
-          api.get('/pharmacy/inventory/low_stock/'),
+        const [inventory, summaryRes, salesRes] = await Promise.all([
+          fetchAllPages('/pharmacy/inventory/'),
           api.get('/pharmacy/sales/daily_summary/'),
           api.get('/pharmacy/sales/', { params: { page: 1 } }),
         ]);
 
-        const all = invRes.data.results || invRes.data || [];
-        const low = lowRes.data || [];
+        const medMap = new Map();
+        inventory.forEach((i) => {
+          const cur = medMap.get(i.medicine);
+          if (cur) {
+            cur.quantity += Number(i.quantity || 0);
+          } else {
+            medMap.set(i.medicine, { ...i, quantity: Number(i.quantity || 0) });
+          }
+        });
+        const medicines = [...medMap.values()];
 
         setStats({
-          total: all.length,
-          low: low.filter(i => i.stock_status === 'low_stock').length,
-          out: low.filter(i => i.stock_status === 'out_of_stock').length,
+          total: medicines.length,
+          low: medicines.filter(i => i.medicine_stock_status === 'low_stock').length,
+          out: medicines.filter(i => i.medicine_stock_status === 'out_of_stock').length,
         });
 
-        setLowStock(low.map(i => ({
+        setLowStock(medicines.filter(i => i.medicine_stock_status !== 'available').map(i => ({
           id: i.id,
           medicine: i.medicine_name,
           quantity: i.quantity,
-          status: i.stock_status === 'out_of_stock' ? 'out' : 'low',
+          status: i.medicine_stock_status === 'out_of_stock' ? 'out' : 'low',
         })));
 
         setSalesSummary(summaryRes.data);

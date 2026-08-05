@@ -6,7 +6,10 @@ import InventoryTable from '../../../components/pharmacy/InventoryTable/Inventor
 export default function LowStock(){
     const { inventory } = useOutletContext();
 
-    const lowStockItems = inventory.filter((item) => item.quantity < 10);
+    const lowStockItems = inventory.filter(
+        (item) => item.medicine_stock_status === 'low_stock' || item.medicine_stock_status === 'out_of_stock'
+    );
+    const lowMedicineCount = new Set(lowStockItems.map((item) => item.medicine)).size;
 
     return(
         <div className={styles.page}>
@@ -14,7 +17,7 @@ export default function LowStock(){
                 <div>
                     <h1 className={styles.title}>Low Stock</h1>
                     <p className={styles.subtitle}>
-                        {lowStockItems.length} medicine{lowStockItems.length !== 1 ? 's' : ''} running low
+                        {lowMedicineCount} medicine{lowMedicineCount !== 1 ? 's' : ''} running low
                     </p>
                 </div>
             </div>

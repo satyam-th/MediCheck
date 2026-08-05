@@ -27,5 +27,5 @@ class MedicinePublicSerializer(serializers.ModelSerializer):
         model  = GlobalMedicine
         fields = [
             'id', 'name', 'generic_name', 'composition',
-            'requires_prescription', 'photo', 'category'
+            'manufacturer', 'requires_prescription', 'photo', 'category'
         ]

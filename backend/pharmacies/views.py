@@ -3,7 +3,8 @@ from datetime import date
 from rest_framework import viewsets, generics, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, OuterRef, Subquery
+from django.db.models.functions import Coalesce
 
 from users.models import User
 from .models import Pharmacy, LocalInventory, Sale, Patient, StaffAttendance
@@ -53,9 +54,17 @@ class InventoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsPharmacyOwner]
 
     def get_queryset(self):
+        # Total quantity of a medicine across all its batches (for medicine-level stock status)
+        medicine_total = LocalInventory.objects.filter(
+            pharmacy=OuterRef('pharmacy'),
+            medicine=OuterRef('medicine'),
+        ).values('medicine').annotate(
+            t=Coalesce(Sum('quantity'), 0)
+        ).values('t')
+
         return LocalInventory.objects.filter(
             pharmacy=self.request.user.pharmacy
-        ).select_related('medicine')
+        ).select_related('medicine').annotate(medicine_total_qty=Subquery(medicine_total))
 
     def perform_create(self, serializer):
         serializer.save(pharmacy=self.request.user.pharmacy)
@@ -65,7 +74,7 @@ class InventoryViewSet(viewsets.ModelViewSet):
         pharmacy  = request.user.pharmacy
 
         low_items = self.get_queryset().filter(
-            quantity__lte=pharmacy.low_stock_threshold
+            medicine_total_qty__lte=pharmacy.low_stock_threshold
         )
 
         serializer = self.get_serializer(low_items, many=True)

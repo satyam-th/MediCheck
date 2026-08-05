@@ -4,81 +4,158 @@ import Modal from '../../ui/Modal/Modal';
 import api from '../../../services/api';
 
 export default function MedicineFormModal({isOpen, onClose, onSubmit, initialData}){
-    const[medicineId, setMedicineId] = useState(initialData?.medicine || '');
-    const[isAddingNew, setIsAddingNew] = useState(false);
-    const[newMedicineName, setNewMedicineName] = useState('');
-    const[newGenericName, setNewGenericName] = useState('');
-    const[newCategory, setNewCategory] = useState('');
-    const [quantity, setQuantity] = useState(initialData?.quantity || '');
-    const [mrp, setMrp] = useState(initialData?.mrp || '');
+    if (!isOpen) return null;
+
+    return(
+        <Modal isOpen={isOpen} onClose={onClose} title={initialData ? 'Edit medicine' : 'Add medicine'}>
+            <MedicineFormContent onClose={onClose} onSubmit={onSubmit} initialData={initialData} />
+        </Modal>
+    );
+}
+
+function MedicineFormContent({onClose, onSubmit, initialData}){
+    const isEdit = !!initialData;
+
+    const [medicineName, setMedicineName] = useState(initialData?.medicine_name || '');
+    const [selectedMedicineId, setSelectedMedicineId] = useState(initialData?.medicine || null);
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searching, setSearching] = useState(false);
+    const [highlightIndex, setHighlightIndex] = useState(0);
+
+    const [genericName, setGenericName] = useState(initialData?.generic_name || '');
+    const [genericList, setGenericList] = useState([]);
+    const [showGenericSuggestions, setShowGenericSuggestions] = useState(false);
+    const [genericHighlight, setGenericHighlight] = useState(0);
+
+    const [category, setCategory] = useState('');
+    const [categoryList, setCategoryList] = useState([]);
+    const [showCategorySuggestions, setShowCategorySuggestions] = useState(false);
+
+    const [quantity, setQuantity] = useState(initialData?.quantity ?? '');
+    const [mrp, setMrp] = useState(initialData?.mrp ?? '');
     const [batchno, setBatchno] = useState(initialData?.batch_number || '');
     const [expiryDate, setExpiryDate] = useState(initialData?.expiry_date || '');
-    const[errors, setErrors] = useState({});
-    const[medicineList, setMedicineList] = useState([]);
-    const[searchQuery, setSearchQuery] = useState('');
-    const[searching, setSearching] = useState(false);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        if (initialData) {
-            setMedicineId(initialData.medicine || '');
-            setIsAddingNew(false);
-            setNewMedicineName('');
-            setNewGenericName('');
-            setNewCategory('');
-            setQuantity(initialData.quantity || '');
-            setMrp(initialData.mrp || '');
-            setBatchno(initialData.batch_number || '');
-            setExpiryDate(initialData.expiry_date || '');
-        } else {
-            setMedicineId('');
-            setIsAddingNew(false);
-            setNewMedicineName('');
-            setNewGenericName('');
-            setNewCategory('');
-            setQuantity('');
-            setMrp('');
-            setBatchno('');
-            setExpiryDate('');
-        }
-        setErrors({});
-    }, [initialData]);
+        let active = true;
+        Promise.all([
+            api.get('/pharmacy/catalog/categories/'),
+            api.get('/pharmacy/catalog/generic-names/'),
+        ])
+            .then(([catRes, genRes]) => {
+                if (!active) return;
+                setCategoryList(catRes.data || []);
+                setGenericList(genRes.data || []);
+            })
+            .catch(() => {});
+        return () => { active = false; };
+    }, []);
 
     useEffect(() => {
-        if (!isOpen) return;
+        if (isEdit) return;
 
-        async function fetchMedicines() {
+        const timer = setTimeout(async () => {
+            const q = medicineName.trim();
+            if (q.length < 1) {
+                setSuggestions([]);
+                setSearching(false);
+                setShowSuggestions(false);
+                return;
+            }
+
             setSearching(true);
             try {
-                const params = searchQuery.length >= 2 ? { q: searchQuery } : {};
-                const res = await api.get('/pharmacy/catalog/', { params });
-                setMedicineList(res.data.results || res.data || []);
+                const res = await api.get('/pharmacy/catalog/', { params: { q } });
+                setSuggestions(res.data.results || res.data || []);
             } catch {
-                setMedicineList([]);
+                setSuggestions([]);
             } finally {
                 setSearching(false);
             }
-        }
+        }, 250);
 
-        const timer = setTimeout(fetchMedicines, 300);
         return () => clearTimeout(timer);
-    }, [isOpen, searchQuery]);
+    }, [isEdit, medicineName]);
 
-    function validate() {
+    function handlePickMedicine(med){
+        setSelectedMedicineId(med.id);
+        setMedicineName(med.name);
+        setGenericName(med.generic_name || '');
+        if (med.category) setCategory(med.category);
+        setShowSuggestions(false);
+        setHighlightIndex(0);
+        setErrors((prev) => ({ ...prev, medicine: '' }));
+    }
+
+    function handleNameChange(e){
+        setMedicineName(e.target.value);
+        setSelectedMedicineId(null);
+        setHighlightIndex(0);
+        setShowSuggestions(true);
+        setErrors((prev) => ({ ...prev, medicine: '' }));
+    }
+
+    function handleNameKeyDown(e){
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setHighlightIndex((prev) => Math.min(prev + 1, suggestions.length - 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setHighlightIndex((prev) => Math.max(prev - 1, 0));
+        } else if (e.key === 'Enter') {
+            if (showSuggestions && suggestions.length > 0) {
+                e.preventDefault();
+                handlePickMedicine(suggestions[highlightIndex]);
+            }
+        } else if (e.key === 'Escape') {
+            setShowSuggestions(false);
+        }
+    }
+
+    const filteredGenerics = genericName.trim()
+        ? genericList.filter((g) => g.toLowerCase().includes(genericName.trim().toLowerCase())).slice(0, 8)
+        : genericList.slice(0, 8);
+
+    function handlePickGeneric(name){
+        setGenericName(name);
+        setShowGenericSuggestions(false);
+        setGenericHighlight(0);
+    }
+
+    function handleGenericKeyDown(e){
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setGenericHighlight((prev) => Math.min(prev + 1, filteredGenerics.length - 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setGenericHighlight((prev) => Math.max(prev - 1, 0));
+        } else if (e.key === 'Enter') {
+            if (showGenericSuggestions && filteredGenerics.length > 0) {
+                e.preventDefault();
+                handlePickGeneric(filteredGenerics[genericHighlight]);
+            }
+        } else if (e.key === 'Escape') {
+            setShowGenericSuggestions(false);
+        }
+    }
+
+    const filteredCategories = category.trim()
+        ? categoryList.filter((c) => c.toLowerCase().includes(category.trim().toLowerCase())).slice(0, 8)
+        : categoryList.slice(0, 8);
+
+    function validate(){
         const newErrors = {};
 
-        if (!isAddingNew && !medicineId) newErrors.medicine = 'Please select a medicine';
-        if (isAddingNew && !newMedicineName.trim()) newErrors.newMedicine = 'Medicine name is required';
-        if (!quantity || Number(quantity) < 0) newErrors.quantity = 'Enter a valid quantity';
-        if (!mrp || Number(mrp) <= 0) newErrors.mrp = 'Enter a valid MRP';
+        if (!medicineName.trim()) newErrors.medicine = 'Medicine name is required';
+        if (quantity === '' || Number(quantity) < 0) newErrors.quantity = 'Enter a valid quantity';
+        if (mrp === '' || Number(mrp) <= 0) newErrors.mrp = 'Enter a valid MRP';
         if (!batchno.trim()) newErrors.batchno = 'Batch number is required';
         if (!expiryDate) newErrors.expiryDate = 'Expiry date is required';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-    }
-
-    function handleCancel(){
-        onClose();
     }
 
     function handleSubmit(){
@@ -92,105 +169,124 @@ export default function MedicineFormModal({isOpen, onClose, onSubmit, initialDat
             expiry_date: expiryDate,
         };
 
-        if (isAddingNew) {
-            payload.new_medicine_name = newMedicineName;
-            payload.new_generic_name = newGenericName;
-            payload.new_category = newCategory;
+        if (isEdit) {
+            payload.medicine = initialData.medicine;
         } else {
-            payload.medicine = Number(medicineId);
+            const exactMatch = suggestions.find(
+                (s) => s.name.trim().toLowerCase() === medicineName.trim().toLowerCase()
+            );
+            const medId = selectedMedicineId || exactMatch?.id;
+
+            if (medId) {
+                payload.medicine = Number(medId);
+            } else {
+                payload.new_medicine_name = medicineName.trim();
+                payload.new_generic_name = genericName.trim();
+                payload.new_category = category.trim();
+            }
         }
 
         onSubmit(payload);
     }
 
     return(
-        <Modal isOpen={isOpen} onClose={handleCancel} title={initialData ? 'Edit medicine' : 'Add medicine'}>
-            {!initialData && (
-                <div className={styles.modeToggle}>
-                    <button
-                        className={!isAddingNew ? styles.modeBtnActive : styles.modeBtn}
-                        onClick={() => { setIsAddingNew(false); setErrors((prev) => ({ ...prev, medicine: '', newMedicine: '' })); }}
-                    >
-                        Select Existing
-                    </button>
-                    <button
-                        className={isAddingNew ? styles.modeBtnActive : styles.modeBtn}
-                        onClick={() => { setIsAddingNew(true); setMedicineId(''); setErrors((prev) => ({ ...prev, medicine: '', newMedicine: '' })); }}
-                    >
-                        Add New Medicine
-                    </button>
+        <>
+            <div className={styles.field}>
+                <label htmlFor='medicineName'>Medicine Name *</label>
+                <div className={styles.autocomplete}>
+                    <input
+                        id='medicineName'
+                        type="text"
+                        placeholder="Type medicine name..."
+                        value={medicineName}
+                        onChange={handleNameChange}
+                        onFocus={() => setShowSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                        onKeyDown={handleNameKeyDown}
+                        readOnly={isEdit}
+                        className={isEdit ? styles.readonly : ''}
+                    />
+                    {!isEdit && showSuggestions && medicineName.trim() && (
+                        <ul className={styles.suggestionList}>
+                            {searching && suggestions.length === 0 ? (
+                                <li className={styles.suggestionEmpty}>Searching...</li>
+                            ) : suggestions.length === 0 ? (
+                                <li className={styles.suggestionEmpty}>No matches — will be added as a new medicine</li>
+                            ) : (
+                                suggestions.slice(0, 8).map((med, idx) => (
+                                    <li
+                                        key={med.id}
+                                        className={idx === highlightIndex ? styles.suggestionActive : ''}
+                                        onMouseDown={() => handlePickMedicine(med)}
+                                        onMouseEnter={() => setHighlightIndex(idx)}
+                                    >
+                                        <span className={styles.suggestionName}>{med.name}</span>
+                                        {med.generic_name && <span className={styles.suggestionMeta}>{med.generic_name}</span>}
+                                    </li>
+                                ))
+                            )}
+                        </ul>
+                    )}
                 </div>
-            )}
+                {errors.medicine && <span className={styles.errorText}>{errors.medicine}</span>}
+            </div>
 
-            {isAddingNew ? (
-                <>
-                    <div className={styles.field}>
-                        <label htmlFor='newMedicineName'>Medicine Name *</label>
-                        <input
-                            id='newMedicineName'
-                            type="text"
-                            placeholder="e.g. Paracetamol 500mg"
-                            value={newMedicineName}
-                            onChange={(e) => { setNewMedicineName(e.target.value); setErrors((prev) => ({ ...prev, newMedicine: '' })); }}
-                        />
-                        {errors.newMedicine && <span className={styles.errorText}>{errors.newMedicine}</span>}
-                    </div>
-
-                    <div className={styles.field}>
-                        <label htmlFor='newGenericName'>Generic Name</label>
-                        <input
-                            id='newGenericName'
-                            type="text"
-                            placeholder="e.g. Acetaminophen"
-                            value={newGenericName}
-                            onChange={(e) => setNewGenericName(e.target.value)}
-                        />
-                    </div>
-
-                    <div className={styles.field}>
-                        <label htmlFor='newCategory'>Category</label>
-                        <input
-                            id='newCategory'
-                            type="text"
-                            placeholder="e.g. Analgesic"
-                            value={newCategory}
-                            onChange={(e) => setNewCategory(e.target.value)}
-                        />
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div className={styles.field}>
-                        <label htmlFor='medicineSearch'>Search Medicine</label>
-                        <input
-                            id='medicineSearch'
-                            type="text"
-                            placeholder="Type to search medicines..."
-                            value={searchQuery}
-                            onChange={(e) => { setSearchQuery(e.target.value); setErrors((prev) => ({ ...prev, medicine: '' })); }}
-                        />
-                        {errors.medicine && <span className={styles.errorText}>{errors.medicine}</span>}
-                    </div>
-
-                    <div className={styles.field}>
-                        <label htmlFor='medicineSelect'>Select Medicine</label>
-                        <select
-                            id='medicineSelect'
-                            value={medicineId}
-                            onChange={(e) => setMedicineId(e.target.value)}
-                            disabled={searching}
-                        >
-                            <option value="">
-                                {searching ? 'Searching...' : medicineList.length === 0 ? 'No medicines found' : '-- Select a medicine --'}
-                            </option>
-                            {medicineList.map((med) => (
-                                <option key={med.id} value={med.id}>
-                                    {med.name} {med.generic_name ? `(${med.generic_name})` : ''}
-                                </option>
+            <div className={styles.field}>
+                <label htmlFor='genericName'>Generic Name</label>
+                <div className={styles.autocomplete}>
+                    <input
+                        id='genericName'
+                        type="text"
+                        placeholder="Type generic name..."
+                        value={genericName}
+                        onChange={(e) => { setGenericName(e.target.value); setShowGenericSuggestions(true); setGenericHighlight(0); }}
+                        onFocus={() => setShowGenericSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowGenericSuggestions(false), 150)}
+                        onKeyDown={handleGenericKeyDown}
+                        readOnly={isEdit}
+                        className={isEdit ? styles.readonly : ''}
+                    />
+                    {!isEdit && showGenericSuggestions && filteredGenerics.length > 0 && (
+                        <ul className={styles.suggestionList}>
+                            {filteredGenerics.map((g, idx) => (
+                                <li
+                                    key={g}
+                                    className={idx === genericHighlight ? styles.suggestionActive : ''}
+                                    onMouseDown={() => handlePickGeneric(g)}
+                                    onMouseEnter={() => setGenericHighlight(idx)}
+                                >
+                                    <span className={styles.suggestionName}>{g}</span>
+                                </li>
                             ))}
-                        </select>
+                        </ul>
+                    )}
+                </div>
+            </div>
+
+            {!isEdit && (
+                <div className={styles.field}>
+                    <label htmlFor='category'>Category</label>
+                    <div className={styles.autocomplete}>
+                        <input
+                            id='category'
+                            type="text"
+                            placeholder="Type category..."
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            onFocus={() => setShowCategorySuggestions(true)}
+                            onBlur={() => setTimeout(() => setShowCategorySuggestions(false), 150)}
+                        />
+                        {showCategorySuggestions && filteredCategories.length > 0 && (
+                            <ul className={styles.suggestionList}>
+                                {filteredCategories.map((c) => (
+                                    <li key={c} onMouseDown={() => { setCategory(c); setShowCategorySuggestions(false); }}>
+                                        <span className={styles.suggestionName}>{c}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
-                </>
+                </div>
             )}
 
             <div className={styles.field}>
@@ -218,9 +314,9 @@ export default function MedicineFormModal({isOpen, onClose, onSubmit, initialDat
             </div>
 
             <div className={styles.modalActions}>
-                <button className={styles.cancelBtn} onClick={handleCancel}>Cancel</button>
-                <button className={styles.submitBtn} onClick={handleSubmit}>{initialData ? 'Update medicine' : 'Add medicine'}</button>
+                <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
+                <button className={styles.submitBtn} onClick={handleSubmit}>{isEdit ? 'Update medicine' : 'Add medicine'}</button>
             </div>
-        </Modal>
+        </>
     );
 }

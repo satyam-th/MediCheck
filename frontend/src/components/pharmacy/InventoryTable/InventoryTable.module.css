@@ -24,6 +24,43 @@
   border-top: 1px solid var(--border);
 }
 
+/* ---medicine group header row--- */
+.medicineRow {
+  background: var(--shadow);
+}
+
+.medicineRow td {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+}
+
+.medicineName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text-color-primary);
+  font-size: 13px;
+}
+
+.genericName {
+  font-size: 11px;
+  color: var(--text-color-secondary);
+  margin-top: 2px;
+}
+
+.totalCell {
+  color: var(--text-color-secondary);
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.batchRow td {
+  color: var(--text-color-secondary);
+}
+
 /* ---action button--- */
 .actionCol {
   white-space: nowrap;

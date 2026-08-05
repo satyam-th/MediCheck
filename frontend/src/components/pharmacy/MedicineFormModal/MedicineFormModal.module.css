@@ -66,6 +66,68 @@
   margin-top: 2px;
 }
 
+/* autocomplete */
+.autocomplete {
+  position: relative;
+}
+
+.suggestionList {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestionList li {
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.suggestionList li:hover,
+.suggestionList li.suggestionActive {
+  background: var(--shadow);
+}
+
+.suggestionName {
+  color: var(--text-color-primary);
+  font-weight: 500;
+}
+
+.suggestionMeta {
+  color: var(--text-color-secondary);
+  font-size: 11px;
+}
+
+.suggestionEmpty {
+  color: var(--text-color-secondary);
+  font-size: 12px;
+  cursor: default;
+}
+
+.suggestionList li.suggestionEmpty:hover {
+  background: transparent;
+}
+
+.readonly {
+  background: var(--shadow);
+  cursor: not-allowed;
+}
+
+/* mode toggle (kept for backwards compatibility) */
 .modeToggle {
   display: flex;
   gap: 0;

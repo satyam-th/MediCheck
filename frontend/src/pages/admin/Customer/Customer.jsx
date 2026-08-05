@@ -1,27 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import CustomerTable from '../../../components/admin/CustomerTable/CustomerTable';
 
+import api from '../../../services/api';
+
 import styles from './Customer.module.css';
 
-const initialCustomers = [
-  { id: 1, name: 'Suzane Maharjan', email: 'suzane.m@gmail.com', dateJoined: 'Jul 10, 2026', status: 'active' },
-  { id: 2, name: 'Prakriti Adhikari', email: 'prakriti.a@gmail.com', dateJoined: 'Jul 8, 2026', status: 'active' },
-  { id: 3, name: 'Nabin Karki', email: 'nabin.k@gmail.com', dateJoined: 'Jul 4, 2026', status: 'inactive' },
-  { id: 4, name: 'Sristi Bhandari', email: 'sristi.b@gmail.com', dateJoined: 'Jun 29, 2026', status: 'active' },
-]
-
 export default function Customer() {
-  const [customers, setCustomers] = useState(initialCustomers);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  function handleStatusChange(customerId, newStatus) {
-    setCustomers((prev) =>
-      prev.map((customer) =>
-        customer.id === customerId
-          ? { ...customer, status: newStatus }
-          : customer
-      )
-    );
+  useEffect(() => {
+    async function fetchCustomers() {
+      try {
+        const res = await api.get('/admin/customers/');
+        const data = res.data.results || res.data || [];
+        setCustomers(data.map((c) => ({
+          id: c.id,
+          name: c.name,
+          email: c.email,
+          dateJoined: new Date(c.date_joined).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          status: c.is_active ? 'active' : 'inactive',
+        })));
+      } catch {
+        setCustomers([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCustomers();
+  }, []);
+
+  async function handleStatusChange(customerId, newStatus) {
+    try {
+      await api.patch(`/admin/customers/${customerId}/`, { is_active: newStatus === 'active' });
+      setCustomers((prev) =>
+        prev.map((customer) =>
+          customer.id === customerId ? { ...customer, status: newStatus } : customer
+        )
+      );
+    } catch {
+      // silently fail — keep old status
+    }
   }
 
   return (
@@ -34,7 +54,13 @@ export default function Customer() {
       </div>
 
       <div className={styles.section}>
-        <CustomerTable customers={customers} onStatusChange={handleStatusChange} />
+        {loading ? (
+          <p className={styles.empty}>Loading customers...</p>
+        ) : customers.length === 0 ? (
+          <p className={styles.empty}>No customers registered yet.</p>
+        ) : (
+          <CustomerTable customers={customers} onStatusChange={handleStatusChange} />
+        )}
       </div>
     </div>
   );

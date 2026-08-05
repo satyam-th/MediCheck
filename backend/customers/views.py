@@ -1,5 +1,6 @@
 
 from rest_framework.views import APIView
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
@@ -10,6 +11,32 @@ from catalog.models import GlobalMedicine
 from catalog.serializers import MedicinePublicSerializer
 from pharmacies.models import Pharmacy, LocalInventory
 from pharmacies.serializers import CustomerStockSerializer, PharmacyPublicSerializer, PharmacySerializer
+from .serializers import AdminCustomerSerializer
+
+
+class IsAdminRole(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return (
+            request.user.is_authenticated and
+            request.user.role in ('worker_admin', 'super_admin')
+        )
+
+
+class AdminCustomerListView(generics.ListAPIView):
+    """List all registered customers for the admin panel."""
+
+    serializer_class   = AdminCustomerSerializer
+    permission_classes = [IsAdminRole]
+    queryset           = User.objects.filter(role='customer').order_by('-date_joined')
+
+
+class AdminCustomerDetailView(generics.RetrieveUpdateAPIView):
+    """Update a customer's active status (active/inactive)."""
+
+    serializer_class   = AdminCustomerSerializer
+    permission_classes = [IsAdminRole]
+    queryset           = User.objects.filter(role='customer')
 
 class MedicineSearchView(APIView):
 

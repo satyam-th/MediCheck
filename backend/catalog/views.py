@@ -76,3 +76,31 @@ class ApprovedMedicinesView(generics.ListAPIView):
             )
 
         return queryset
+
+
+class CategoryListView(generics.GenericAPIView):
+    """List distinct medicine categories for autocomplete in the add-medicine form."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        categories = (
+            GlobalMedicine.objects.exclude(category='')
+            .values_list('category', flat=True)
+            .distinct()
+            .order_by('category')
+        )
+        return Response(list(categories))
+
+
+class GenericNameListView(generics.GenericAPIView):
+    """List distinct generic names for autocomplete in the add-medicine form."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        names = (
+            GlobalMedicine.objects.exclude(generic_name='')
+            .values_list('generic_name', flat=True)
+            .distinct()
+            .order_by('generic_name')
+        )
+        return Response(list(names))

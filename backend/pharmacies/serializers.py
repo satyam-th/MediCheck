@@ -2,6 +2,8 @@
 
 from rest_framework import serializers
 from django.db import transaction   # For atomic sale creation
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 
 from .models import Pharmacy, LocalInventory, Sale, SaleItem, Patient, StaffAttendance
 from catalog.models import GlobalMedicine
@@ -49,6 +51,9 @@ class InventorySerializer(serializers.ModelSerializer):
 
     stock_status = serializers.ReadOnlyField()
 
+    # Overall availability of this medicine across all its batches
+    medicine_stock_status = serializers.SerializerMethodField()
+
     # Write-only fields for creating new medicine requests
     new_medicine_name = serializers.CharField(write_only=True, required=False)
     new_generic_name = serializers.CharField(write_only=True, required=False, allow_blank=True)
@@ -69,6 +74,7 @@ class InventorySerializer(serializers.ModelSerializer):
             'batch_number',
             'expiry_date',
             'stock_status',     # Auto calculated
+            'medicine_stock_status',
             'updated_at',
             'new_medicine_name',
             'new_generic_name',
@@ -76,24 +82,54 @@ class InventorySerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'updated_at']
 
-    def validate(self, data):
-        medicine_id = data.get('medicine')
-        new_medicine_name = data.get('new_medicine_name')
+    def get_medicine_stock_status(self, obj):
+        total = getattr(obj, 'medicine_total_qty', None)
+        if total is None:
+            total = LocalInventory.objects.filter(
+                pharmacy=obj.pharmacy, medicine=obj.medicine
+            ).aggregate(t=Coalesce(Sum('quantity'), 0))['t']
 
-        if not medicine_id and not new_medicine_name:
-            raise serializers.ValidationError(
-                "Either 'medicine' (existing ID) or 'new_medicine_name' is required."
-            )
-        if medicine_id and new_medicine_name:
-            raise serializers.ValidationError(
-                "Provide either 'medicine' or 'new_medicine_name', not both."
-            )
+        if total == 0:
+            return 'out_of_stock'
+        if total <= obj.pharmacy.low_stock_threshold:
+            return 'low_stock'
+        return 'available'
+
+    def validate(self, data):
+        if self.instance is None:
+            medicine_id = data.get('medicine')
+            new_medicine_name = data.get('new_medicine_name')
+
+            if not medicine_id and not new_medicine_name:
+                raise serializers.ValidationError(
+                    "Either 'medicine' (existing ID) or 'new_medicine_name' is required."
+                )
+            if medicine_id and new_medicine_name:
+                raise serializers.ValidationError(
+                    "Provide either 'medicine' or 'new_medicine_name', not both."
+                )
+        else:
+            medicine = data.get('medicine', self.instance.medicine)
+            batch_number = data.get('batch_number', self.instance.batch_number)
+
+            if medicine is not None or batch_number is not None:
+                exists = LocalInventory.objects.filter(
+                    pharmacy=self.instance.pharmacy,
+                    medicine=medicine,
+                    batch_number=batch_number,
+                ).exclude(pk=self.instance.pk).exists()
+                if exists:
+                    raise serializers.ValidationError(
+                        'An inventory entry with this medicine and batch number already exists.'
+                    )
         return data
 
     def create(self, validated_data):
         new_medicine_name = validated_data.pop('new_medicine_name', None)
         new_generic_name = validated_data.pop('new_generic_name', '')
         new_category = validated_data.pop('new_category', '')
+
+        pharmacy = validated_data.pop('pharmacy', self.context['request'].user.pharmacy)
 
         if new_medicine_name:
             medicine = GlobalMedicine.objects.create(
@@ -105,7 +141,30 @@ class InventorySerializer(serializers.ModelSerializer):
             )
             validated_data['medicine'] = medicine
 
-        return super().create(validated_data)
+        medicine = validated_data.pop('medicine')
+        batch_number = validated_data.pop('batch_number', '')
+
+        # Same medicine + same batch -> add to the existing stock entry.
+        existing = LocalInventory.objects.filter(
+            pharmacy=pharmacy,
+            medicine=medicine,
+            batch_number=batch_number,
+        ).first()
+
+        if existing:
+            existing.quantity = existing.quantity + validated_data.pop('quantity', 0)
+            existing.mrp = validated_data.get('mrp', existing.mrp)
+            existing.expiry_date = validated_data.get('expiry_date', existing.expiry_date)
+            existing.save()
+            return existing
+
+        # Same medicine but a different batch -> a separate entry under the same medicine.
+        return LocalInventory.objects.create(
+            pharmacy=pharmacy,
+            medicine=medicine,
+            batch_number=batch_number,
+            **validated_data,
+        )
 
 
 class CustomerStockSerializer(serializers.ModelSerializer):

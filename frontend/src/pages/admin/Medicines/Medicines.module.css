@@ -31,6 +31,12 @@
   gap: 14px;
 }
 
+.empty {
+  color: var(--text-color-secondary);
+  font-size: 15px;
+  padding: 24px 0;
+}
+
 .addBtn {
   display: flex;
   align-items: center;

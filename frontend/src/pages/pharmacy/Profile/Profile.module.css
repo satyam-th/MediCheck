@@ -68,3 +68,59 @@
     color: var(--text-color-primary);
     font-weight: 500;
 }
+
+.nameBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.status {
+    font-size: 12px;
+    color: var(--text-color-secondary);
+    text-transform: capitalize;
+}
+
+.editBtn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-family: var(--font-main);
+    font-size: 14px;
+    color: var(--text-color-primary);
+    cursor: pointer;
+}
+
+.input {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--font-main);
+    font-size: 14px;
+    color: var(--text-color-primary);
+}
+
+.saveRow {
+    display: flex;
+    justify-content: flex-end;
+    grid-column: 1 / -1;
+}
+
+.saveBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 16px;
+    font-family: var(--font-main);
+    font-size: 14px;
+    cursor: pointer;
+}

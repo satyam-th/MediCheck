@@ -6,21 +6,24 @@ const categories = ['Painkiller', 'Antibiotic', 'Antihistamine', 'Hormone', 'Oth
 
 export default function GlobalMedicineFormModal({ isOpen, onClose, onSubmit, initialData }) {
     const [name, setName] = useState(initialData?.name || '');
+    const [genericName, setGenericName] = useState(initialData?.generic_name || '');
+    const [manufacturer, setManufacturer] = useState(initialData?.manufacturer || '');
     const [category, setCategory] = useState(initialData?.category || categories[0]);
-    const [description, setDescription] = useState(initialData?.description || '');
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (initialData) {
             // Edit mode -> fill the form
             setName(initialData.name);
-            setCategory(initialData.category);
-            setDescription(initialData.description || '');
+            setGenericName(initialData.generic_name || '');
+            setManufacturer(initialData.manufacturer || '');
+            setCategory(initialData.category || categories[0]);
         } else {
             // Add mode -> clear the form
             setName('');
+            setGenericName('');
+            setManufacturer('');
             setCategory(categories[0]);
-            setDescription('');
         }
 
         // Clear old validation messages
@@ -44,11 +47,10 @@ export default function GlobalMedicineFormModal({ isOpen, onClose, onSubmit, ini
     function handleSubmit() {
         if (!validate()) return; // stop here if invalid, errors are now set
         onSubmit({
-            id: initialData?.id ?? Date.now(),
             name,
+            generic_name: genericName,
+            manufacturer,
             category,
-            description,
-            dateAdded: initialData?.dateAdded ?? new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         });
     }
 
@@ -61,6 +63,16 @@ export default function GlobalMedicineFormModal({ isOpen, onClose, onSubmit, ini
             </div>
 
             <div className={styles.field}>
+                <label htmlFor='genericName'>Generic name</label>
+                <input id='genericName' type="text" value={genericName} onChange={(e) => setGenericName(e.target.value)} />
+            </div>
+
+            <div className={styles.field}>
+                <label htmlFor='manufacturer'>Manufacturer</label>
+                <input id='manufacturer' type="text" value={manufacturer} onChange={(e) => setManufacturer(e.target.value)} />
+            </div>
+
+            <div className={styles.field}>
                 <label htmlFor='category'>Category</label>
                 <select id='category' value={category} onChange={(e) => { setCategory(e.target.value); setErrors((prev) => ({ ...prev, category: '' })); }}>
                     {categories.map((cat) => (
@@ -68,11 +80,6 @@ export default function GlobalMedicineFormModal({ isOpen, onClose, onSubmit, ini
                     ))}
                 </select>
                 {errors.category && <span className={styles.errorText}>{errors.category}</span>}
-            </div>
-
-            <div className={styles.field}>
-                <label htmlFor='description'>Description (optional)</label>
-                <textarea id='description' rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
 
             <div className={styles.modalActions}>

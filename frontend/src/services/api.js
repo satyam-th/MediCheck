@@ -57,3 +57,16 @@ export function clearTokens() {
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('user');
 }
+
+export async function fetchAllPages(url) {
+  const items = [];
+  let nextUrl = url;
+  while (nextUrl) {
+    const res = await api.get(nextUrl);
+    const data = res.data;
+    const results = Array.isArray(data) ? data : data.results;
+    if (Array.isArray(results)) items.push(...results);
+    nextUrl = (data && typeof data === 'object' && data.next) || null;
+  }
+  return items;
+}

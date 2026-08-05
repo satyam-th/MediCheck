@@ -1,24 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 
 import MedicineTable from '../../../components/admin/MedicineTable/MedicineTable';
 import GlobalMedicineFormModal from '../../../components/admin/GlobalMedicineFormModal/GlobalMedicineFormModal';
 import Modal from '../../../components/ui/Modal/Modal';
 
+import api from '../../../services/api';
+
 import styles from './Medicines.module.css'
 
-const initialMedicines = [
-  { id: 1, name: 'Paracetamol 500mg', category: 'Painkiller', dateAdded: 'Jul 9, 2026' },
-  { id: 2, name: 'Amoxicillin 250mg', category: 'Antibiotic', dateAdded: 'Jul 7, 2026' },
-  { id: 3, name: 'Cetirizine 10mg', category: 'Antihistamine', dateAdded: 'Jul 5, 2026' },
-  { id: 4, name: 'Insulin Glargine', category: 'Hormone', dateAdded: 'Jul 2, 2026' },
-]
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
 
 export default function Medicines() {
-  const [medicines, setMedicines] = useState(initialMedicines);
+  const [medicines, setMedicines] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMedicine, setEditingMedicine] = useState(null);
   const [deletingMedicine, setDeletingMedicine] = useState(null);
+
+  useEffect(() => {
+    async function fetchMedicines() {
+      try {
+        const res = await api.get('/admin/catalog/');
+        const data = res.data.results || res.data || [];
+        setMedicines(data.map((m) => ({ ...m, dateAdded: formatDate(m.created_at) })));
+      } catch {
+        setMedicines([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMedicines();
+  }, []);
 
   function handleOpenAdd() {
     setEditingMedicine(null);
@@ -30,22 +45,29 @@ export default function Medicines() {
     setIsModalOpen(true);
   }
 
-  function handleSubmit(medicineData) {
-    if (editingMedicine) {
-      // Edit mode -> replace the matching medicine
-      setMedicines((prev) =>
-        prev.map((m) => (m.id === medicineData.id ? medicineData : m))
-      );
-    } else {
-      // Add mode -> add to the front
-      setMedicines((prev) => [medicineData, ...prev]);
+  async function handleSubmit(medicineData) {
+    try {
+      if (editingMedicine) {
+        const res = await api.patch(`/admin/catalog/${editingMedicine.id}/`, medicineData);
+        setMedicines((prev) => prev.map((m) => (m.id === res.data.id ? { ...res.data, dateAdded: m.dateAdded } : m)));
+      } else {
+        const res = await api.post('/admin/catalog/', medicineData);
+        setMedicines((prev) => [{ ...res.data, dateAdded: formatDate(res.data.created_at) }, ...prev]);
+      }
+    } catch {
+      return;
     }
     setIsModalOpen(false);
     setEditingMedicine(null);
   }
 
-  function handleConfirmDelete() {
-    setMedicines((prev) => prev.filter((m) => m.id !== deletingMedicine.id));
+  async function handleConfirmDelete() {
+    try {
+      await api.delete(`/admin/catalog/${deletingMedicine.id}/`);
+      setMedicines((prev) => prev.filter((m) => m.id !== deletingMedicine.id));
+    } catch {
+      return;
+    }
     setDeletingMedicine(null);
   }
 
@@ -62,7 +84,13 @@ export default function Medicines() {
       </div>
 
       <div className={styles.section}>
-        <MedicineTable medicines={medicines} onEdit={handleOpenEdit} onDelete={setDeletingMedicine} />
+        {loading ? (
+          <p className={styles.empty}>Loading medicines...</p>
+        ) : medicines.length === 0 ? (
+          <p className={styles.empty}>No medicines in the catalogue yet.</p>
+        ) : (
+          <MedicineTable medicines={medicines} onEdit={handleOpenEdit} onDelete={setDeletingMedicine} />
+        )}
       </div>
 
       <GlobalMedicineFormModal

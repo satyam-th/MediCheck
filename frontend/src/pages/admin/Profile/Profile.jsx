@@ -1,14 +1,35 @@
+import { useState, useEffect } from 'react';
 import { UserCircle } from 'lucide-react';
+
+import api from '../../../services/api';
 
 import styles from './Profile.module.css'
 
-const adminData = {
-  name: 'Admin User',
-  email: 'admin@medicheck.com',
-  role: 'Administrator',
-}
+const roleLabels = {
+  super_admin: 'Super Admin',
+  worker_admin: 'Worker Admin',
+  pharmacy: 'Pharmacy',
+  customer: 'Customer',
+};
 
 export default function Profile() {
+  const [adminData, setAdminData] = useState({ name: 'Admin User', email: '', role: 'Administrator' });
+
+  useEffect(() => {
+    api.get('/auth/me/')
+      .then(({ data }) => {
+        const fullName = [data.first_name, data.last_name].filter(Boolean).join(' ') || data.username || data.email;
+        setAdminData({
+          name: fullName,
+          email: data.email,
+          role: roleLabels[data.role] || data.role || 'Administrator',
+        });
+      })
+      .catch(() => {
+        // keep defaults on failure
+      });
+  }, []);
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>

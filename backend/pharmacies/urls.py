@@ -11,7 +11,7 @@ from .views import (
     AdminPharmacyViewSet,
 )
 
-from catalog.views import ApprovedMedicinesView
+from catalog.views import ApprovedMedicinesView, CategoryListView, GenericNameListView
 
 #pharmacy dashboard.
 
@@ -28,6 +28,8 @@ admin_router.register('', AdminPharmacyViewSet, basename='admin-pharmacies')
 urlpatterns = [
 
     path('profile/', PharmacyProfileView.as_view(), name='pharmacy-profile'),
+    path('catalog/categories/', CategoryListView.as_view(), name='pharmacy-catalog-categories'),
+    path('catalog/generic-names/', GenericNameListView.as_view(), name='pharmacy-catalog-generic-names'),
     path('catalog/', ApprovedMedicinesView.as_view(), name='pharmacy-catalog'),
 
     path('', include(pharmacy_router.urls)),

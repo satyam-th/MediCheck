@@ -9,25 +9,24 @@ import Modal from '../../../components/ui/Modal/Modal';
 
 
 export default function Medicines(){
-  const { inventory, handleFormSubmit: onSubmitFromLayout, handleConfirmDelete: onDeleteFromLayout } = useOutletContext();
+  const { inventory, loading, handleFormSubmit: onSubmitFromLayout, handleConfirmDelete: onDeleteFromLayout } = useOutletContext();
   const[isModalOpen, setIsModalOpen] = useState(false);
   const[editingItem, setEditingItem] = useState(null); // null = Add mode, object = Edit mode
   const[confirmingDelete, setConfirmingDelete] = useState(null); // null=no confirm, object=confirming
 
-  function onConfirmDelete(){
-    onDeleteFromLayout(confirmingDelete.id);
-    setConfirmingDelete(null);
+  const medicineCount = new Set(inventory.map((i) => i.medicine)).size;
+
+  async function onConfirmDelete(){
+    const ok = await onDeleteFromLayout(confirmingDelete.id);
+    if (ok) setConfirmingDelete(null);
   }
 
-  function handleCancel(){
-    setIsModalOpen(false);
-    setEditingItem(null);
-  }
-
-  function onFormSubmit(formData) {
-    onSubmitFromLayout(formData, editingItem);
-    setIsModalOpen(false);
-    setEditingItem(null);
+  async function onFormSubmit(formData) {
+    const ok = await onSubmitFromLayout(formData, editingItem);
+    if (ok) {
+      setIsModalOpen(false);
+      setEditingItem(null);
+    }
   };
 
   function handleDeleteClick(item){
@@ -40,7 +39,7 @@ export default function Medicines(){
         <div>
           <h1 className={styles.title}>Medicines</h1>
           <p className={styles.subtitle}>
-            {inventory.length} item{inventory.length !== 1 ? 's' : ''} in your inventory
+            {medicineCount} medicine{medicineCount !== 1 ? 's' : ''} · {inventory.length} batch{inventory.length !== 1 ? 'es' : ''} in your inventory
           </p>
         </div>
       </div>
@@ -60,7 +59,7 @@ export default function Medicines(){
 
       {/* delete confirmation modal */}
       <Modal isOpen={!!confirmingDelete} onClose={()=> setConfirmingDelete(null)} title="Delete medicine?">
-        <p>Are you sure you want to delete <strong>{confirmingDelete?.name}</strong>? This can't be undone.</p>
+        <p>Are you sure you want to delete <strong>{confirmingDelete?.medicine_name}</strong> (batch <strong>{confirmingDelete?.batch_number}</strong>)? This can't be undone.</p>
         <div className={styles.modalActions}>
           <button className={styles.cancelBtn} onClick={() => setConfirmingDelete(null)}>Cancel</button>
           <button className={styles.dangerBtn} onClick={onConfirmDelete}>Delete</button>
@@ -68,7 +67,11 @@ export default function Medicines(){
       </Modal>
 
       <section>
-        {inventory.length === 0 ? (
+        {loading ? (
+          <div className={styles.emptyState}>
+            <p>Loading your inventory...</p>
+          </div>
+        ) : inventory.length === 0 ? (
           <div className={styles.emptyState}>
               <p>No medicines in your inventory yet.</p>
               <p>Click <strong>Add Medicine</strong> to get started.</p>
