@@ -49,6 +49,13 @@
     color: var(--primary);
 }
 
+.active{
+    color: var(--primary);
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 2px;
+}
+
 .portalBtn {
     background-color: var(--primary);
     color: white;

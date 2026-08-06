@@ -12,8 +12,13 @@
   background: #fff;
   border-radius: 10px;
   width: 380px;
+  max-width: 92vw;
   padding: 22px;
   font-family: var(--font-main);
+}
+
+.wide {
+  width: 540px;
 }
 
 .header {

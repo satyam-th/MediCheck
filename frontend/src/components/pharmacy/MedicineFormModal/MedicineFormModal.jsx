@@ -7,7 +7,7 @@ export default function MedicineFormModal({isOpen, onClose, onSubmit, initialDat
     if (!isOpen) return null;
 
     return(
-        <Modal isOpen={isOpen} onClose={onClose} title={initialData ? 'Edit medicine' : 'Add medicine'}>
+        <Modal isOpen={isOpen} onClose={onClose} title={initialData ? 'Edit medicine' : 'Add medicine'} wide>
             <MedicineFormContent onClose={onClose} onSubmit={onSubmit} initialData={initialData} />
         </Modal>
     );

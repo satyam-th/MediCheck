@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import medicheckLogo from '../../../assets/logo/medicheck-logo.png';
 import {Menu, X, LogOut, LayoutDashboard} from 'lucide-react';
 
@@ -32,8 +32,8 @@ export default function NavBar(){
 
             <div className={`${styles.navlinks} ${menuOpen ? styles.open : ''}`}>
 
-                <Link to='/' className={styles.link} onClick={()=>setMenuOpen(false)}>Home</Link>
-                <Link to='/about' className={styles.link} onClick={()=>setMenuOpen(false)}>About</Link>
+                <NavLink to='/' end className={({isActive}) => `${styles.link} ${isActive ? styles.active : ''}`} onClick={()=>setMenuOpen(false)}>Home</NavLink>
+                <NavLink to='/about' className={({isActive}) => `${styles.link} ${isActive ? styles.active : ''}`} onClick={()=>setMenuOpen(false)}>About</NavLink>
 
                 <SearchBar size="small" className={styles.navSearchBar}/>
 

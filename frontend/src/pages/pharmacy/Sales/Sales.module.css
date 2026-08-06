@@ -31,6 +31,7 @@
 }
 
 .select {
+ 
     flex: 1;
     padding: 10px 12px;
     border: 1px solid var(--border);
@@ -60,7 +61,7 @@
 
 .searchBox {
     position: relative;
-    flex: 1;
+    flex: 1 1 auto;
 }
 
 .searchBox .searchIcon {
@@ -73,6 +74,7 @@
 }
 
 .searchBox input {
+    width: 100%;
     padding-left: 36px;
 }
 

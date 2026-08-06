@@ -112,32 +112,6 @@ export default function Dashboard() {
           <RecentMedicines medicines={medicines} />
         </div>
       </section>
-
-      {/* Section 3 — Pending Medicine Requests */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Pending Medicine Requests ({pendingRequests.length})</h2>
-        <div className={styles.pendingList}>
-          {pendingRequests.length === 0 ? (
-            <p className={styles.emptyText}>No pending requests</p>
-          ) : (
-            pendingRequests.map((med) => (
-              <div key={med.id} className={styles.pendingItem}>
-                <div className={styles.pendingInfo}>
-                  <span className={styles.pendingName}>{med.name}</span>
-                  <span className={styles.pendingMeta}>
-                    {med.category} | Requested by {med.submittedBy} | {med.dateAdded}
-                  </span>
-                </div>
-                <div className={styles.pendingActions}>
-                  <button className={styles.approveBtn} onClick={() => handleApprove(med.id)}>Approve</button>
-                  <button className={styles.rejectBtn} onClick={() => handleReject(med.id)}>Reject</button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
     </div>
   );
 }
