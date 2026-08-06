@@ -5,8 +5,7 @@ export default function Guide(){
     const guides = [
         {icon: <Circle fill='green' color="green" size={30}/>, title: "Available", description: "In stock and ready to purchase"},
         {icon: <Circle fill='yellow' color="yellow" size={30}/>, title: "Low Stock", description: "Available but running out soon"},
-        {icon: <Circle fill='red' color="red" size={30}/>, title: "Out of stock", description: "Not available at this pharmacy"},
-        {icon: <Circle fill='blue' color="blue" size={30}/>, title: "Call to confirm", description: "Contact the pharmacy to verify"}
+        {icon: <Circle fill='red' color="red" size={30}/>, title: "Out of stock", description: "Not available at this pharmacy"}
     ];
     return(
         <>

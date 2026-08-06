@@ -33,7 +33,6 @@ export default function Profile() {
           address: res.data.address || '',
           open_time: (res.data.open_time || '').slice(0, 5),
           close_time: (res.data.close_time || '').slice(0, 5),
-          low_stock_threshold: res.data.low_stock_threshold ?? '',
         });
         setRequestForm({
           owner_first_name: res.data.owner_first_name || '',
@@ -74,7 +73,6 @@ export default function Profile() {
         address: form.address,
         open_time: form.open_time ? `${form.open_time}:00` : null,
         close_time: form.close_time ? `${form.close_time}:00` : null,
-        low_stock_threshold: form.low_stock_threshold,
       });
       setPharmacyData(res.data);
       setEditing(false);
@@ -177,11 +175,6 @@ export default function Profile() {
             <div className={styles.field}>
               <label className={styles.label} htmlFor='closeTime'>Closing Time</label>
               <input id='closeTime' name='close_time' type='time' className={styles.input} value={form.close_time} onChange={handleChange} />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor='threshold'>Low Stock Threshold</label>
-              <input id='threshold' name='low_stock_threshold' type='number' className={styles.input} value={form.low_stock_threshold} onChange={handleChange} />
             </div>
 
             <div className={styles.saveRow}>

@@ -20,7 +20,7 @@ export default function Footer(){
                 <ul className={styles.linksList}>
                     <li><Link to='/' className={styles.footerLink}>Home</Link></li>
                     <li><Link to='/about' className={styles.footerLink}>About</Link></li>
-                    <li><Link to='/pharmacies' className={styles.footerLink}>Pharmacies</Link></li>
+                    <li><Link to='/login' className={styles.footerLink}>Login</Link></li>
                 </ul>
             </div>
 
