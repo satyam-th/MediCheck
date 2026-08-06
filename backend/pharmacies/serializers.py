@@ -5,7 +5,7 @@ from django.db import transaction   # For atomic sale creation
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 
-from .models import Pharmacy, LocalInventory, Sale, SaleItem, Patient, StaffAttendance
+from .models import Pharmacy, LocalInventory, Sale, SaleItem, Patient, StaffAttendance, PharmacyProfileChangeRequest
 from catalog.models import GlobalMedicine
 
 class PharmacySerializer(serializers.ModelSerializer):
@@ -14,6 +14,10 @@ class PharmacySerializer(serializers.ModelSerializer):
 
 
     owner_email = serializers.SerializerMethodField()
+    owner_name  = serializers.SerializerMethodField()
+    owner_phone = serializers.SerializerMethodField()
+    owner_first_name = serializers.SerializerMethodField()
+    owner_last_name  = serializers.SerializerMethodField()
 
     class Meta:
         model  = Pharmacy
@@ -21,14 +25,31 @@ class PharmacySerializer(serializers.ModelSerializer):
             'id', 'name', 'contact_number', 'address',
             'latitude', 'longitude', 'status',
             'open_time', 'close_time', 'is_open',
-            'low_stock_threshold', 'license_number',
-            'owner_email', 'created_at'
+            'low_stock_threshold', 'license_number', 'pan_number',
+            'owner_email', 'owner_name', 'owner_phone',
+            'owner_first_name', 'owner_last_name',
+            'created_at'
         ]
         read_only_fields = ['id', 'created_at', 'status']
       
 
     def get_owner_email(self, pharmacy_object):
         return pharmacy_object.user.email
+
+    def get_owner_name(self, pharmacy_object):
+        return pharmacy_object.user.get_full_name() or pharmacy_object.user.username
+
+    def get_owner_phone(self, pharmacy_object):
+        return pharmacy_object.user.phone or pharmacy_object.contact_number
+
+    def get_owner_first_name(self, pharmacy_object):
+        return pharmacy_object.user.first_name
+
+    def get_owner_last_name(self, pharmacy_object):
+        return pharmacy_object.user.last_name
+
+    def create(self, validated_data):
+        return Pharmacy.objects.create(**validated_data)
 
 
 class PharmacyPublicSerializer(serializers.ModelSerializer):
@@ -55,6 +76,7 @@ class InventorySerializer(serializers.ModelSerializer):
     medicine_stock_status = serializers.SerializerMethodField()
 
     # Write-only fields for creating new medicine requests
+    medicine = serializers.PrimaryKeyRelatedField(queryset=GlobalMedicine.objects.all(), required=False)
     new_medicine_name = serializers.CharField(write_only=True, required=False)
     new_generic_name = serializers.CharField(write_only=True, required=False, allow_blank=True)
     new_category = serializers.CharField(write_only=True, required=False, allow_blank=True)
@@ -132,13 +154,21 @@ class InventorySerializer(serializers.ModelSerializer):
         pharmacy = validated_data.pop('pharmacy', self.context['request'].user.pharmacy)
 
         if new_medicine_name:
-            medicine = GlobalMedicine.objects.create(
-                name=new_medicine_name,
-                generic_name=new_generic_name,
-                category=new_category,
-                approval_status='pending',
-                submitted_by=self.context['request'].user,
+            # A brand-new medicine typed by a pharmacy is added straight to the
+            # global catalogue (approved) so it becomes available to customers.
+            medicine, _ = GlobalMedicine.objects.get_or_create(
+                name__iexact=new_medicine_name,
+                defaults={
+                    'name': new_medicine_name,
+                    'generic_name': new_generic_name,
+                    'category': new_category,
+                    'approval_status': 'approved',
+                    'submitted_by': self.context['request'].user,
+                },
             )
+            if medicine.approval_status == 'pending':
+                medicine.approval_status = 'approved'
+                medicine.save(update_fields=['approval_status'])
             validated_data['medicine'] = medicine
 
         medicine = validated_data.pop('medicine')
@@ -226,6 +256,9 @@ class SaleSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         items_data = validated_data.pop('items')
 
+        if not items_data:
+            raise serializers.ValidationError({'items': 'At least one item is required.'})
+
         with transaction.atomic():
 
             sale  = Sale.objects.create(**validated_data)
@@ -235,6 +268,12 @@ class SaleSerializer(serializers.ModelSerializer):
             for item_data in items_data:
                 inventory = item_data['inventory']  
                 qty       = item_data['quantity']   # How many sell
+
+                # Only allow selling from THIS pharmacy's own inventory
+                if inventory.pharmacy_id != sale.pharmacy_id:
+                    raise serializers.ValidationError(
+                        f"'{inventory.medicine.name}' is not part of this pharmacy's inventory."
+                    )
 
                 # Safety check
                 if inventory.quantity < qty:
@@ -282,3 +321,50 @@ class StaffAttendanceSerializer(serializers.ModelSerializer):
        
         user = attendance_object.staff_member
         return user.get_full_name() or user.username
+
+
+class PharmacyProfileChangeRequestSerializer(serializers.ModelSerializer):
+    """Pharmacy-facing serializer: submit & track their own change requests."""
+
+    class Meta:
+        model  = PharmacyProfileChangeRequest
+        fields = ['id', 'requested_changes', 'status', 'note', 'created_at', 'reviewed_at']
+        read_only_fields = ['id', 'status', 'note', 'created_at', 'reviewed_at']
+
+    def validate_requested_changes(self, value):
+        if not isinstance(value, dict) or not value:
+            raise serializers.ValidationError('Provide at least one change to request.')
+
+        for field, new_value in value.items():
+            if field not in PharmacyProfileChangeRequest.REQUESTABLE_FIELDS:
+                raise serializers.ValidationError(f"'{field}' cannot be changed via a request.")
+            if new_value is None or str(new_value).strip() == '':
+                raise serializers.ValidationError(f"'{field}' cannot be empty.")
+        return value
+
+
+class AdminProfileChangeRequestSerializer(serializers.ModelSerializer):
+    """Admin-facing serializer: includes pharmacy + requester info."""
+
+    pharmacy_name        = serializers.ReadOnlyField(source='pharmacy.name')
+    pharmacy_status      = serializers.ReadOnlyField(source='pharmacy.status')
+    pharmacy_contact     = serializers.ReadOnlyField(source='pharmacy.contact_number')
+    pharmacy_address     = serializers.ReadOnlyField(source='pharmacy.address')
+    requested_by_name    = serializers.SerializerMethodField()
+    requested_by_email   = serializers.ReadOnlyField(source='requested_by.email')
+    reviewed_by_email    = serializers.SerializerMethodField()
+
+    class Meta:
+        model  = PharmacyProfileChangeRequest
+        fields = [
+            'id', 'pharmacy_name', 'pharmacy_status', 'pharmacy_contact', 'pharmacy_address',
+            'requested_by_name', 'requested_by_email',
+            'requested_changes', 'status', 'note', 'created_at', 'reviewed_at', 'reviewed_by_email',
+        ]
+        read_only_fields = fields
+
+    def get_requested_by_name(self, obj):
+        return obj.requested_by.get_full_name() or obj.requested_by.username
+
+    def get_reviewed_by_email(self, obj):
+        return obj.reviewed_by.email if obj.reviewed_by else None

@@ -2,13 +2,13 @@ import styles from './SideBar.module.css'
 
 import {Link, NavLink} from 'react-router-dom'
 
-export default function SideBar({brandname='medicheck', navItems=[], userName='Owner', onLogout}){
-    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+export default function SideBar({brandname='medicheck', navItems=[], userName='Owner', onLogout, homePath='/pharmacy/dashboard'}){
+    const initials = (userName || 'Owner').split(' ').map(n => n[0]).join('').toUpperCase();
 
     return(
         <aside className={styles.sidebar}>
             <div className={styles.brand}>
-                <Link to='/pharmacy/dashboard' className={styles.brandName}>{brandname}</Link>
+                <Link to={homePath} className={styles.brandName}>{brandname}</Link>
             </div>
 
             <nav className={styles.nav}>

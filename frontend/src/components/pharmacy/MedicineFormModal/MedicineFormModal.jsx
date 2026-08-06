@@ -56,6 +56,7 @@ function MedicineFormContent({onClose, onSubmit, initialData}){
     useEffect(() => {
         if (isEdit) return;
 
+        let stale = false;
         const timer = setTimeout(async () => {
             const q = medicineName.trim();
             if (q.length < 1) {
@@ -68,15 +69,18 @@ function MedicineFormContent({onClose, onSubmit, initialData}){
             setSearching(true);
             try {
                 const res = await api.get('/pharmacy/catalog/', { params: { q } });
-                setSuggestions(res.data.results || res.data || []);
+                if (!stale) setSuggestions(res.data.results || res.data || []);
             } catch {
-                setSuggestions([]);
+                if (!stale) setSuggestions([]);
             } finally {
-                setSearching(false);
+                if (!stale) setSearching(false);
             }
         }, 250);
 
-        return () => clearTimeout(timer);
+        return () => {
+            stale = true;
+            clearTimeout(timer);
+        };
     }, [isEdit, medicineName]);
 
     function handlePickMedicine(med){

@@ -19,6 +19,7 @@ export default function Medicines() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMedicine, setEditingMedicine] = useState(null);
   const [deletingMedicine, setDeletingMedicine] = useState(null);
+  const [modalOpenCount, setModalOpenCount] = useState(0);
 
   useEffect(() => {
     async function fetchMedicines() {
@@ -37,11 +38,13 @@ export default function Medicines() {
 
   function handleOpenAdd() {
     setEditingMedicine(null);
+    setModalOpenCount((c) => c + 1);
     setIsModalOpen(true);
   }
 
   function handleOpenEdit(medicine) {
     setEditingMedicine(medicine);
+    setModalOpenCount((c) => c + 1);
     setIsModalOpen(true);
   }
 
@@ -94,6 +97,7 @@ export default function Medicines() {
       </div>
 
       <GlobalMedicineFormModal
+        key={`${editingMedicine?.id ?? 'new'}-${modalOpenCount}`}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}

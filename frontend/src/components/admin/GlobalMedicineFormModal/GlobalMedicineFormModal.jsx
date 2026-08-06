@@ -1,5 +1,5 @@
 import styles from './GlobalMedicineFormModal.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Modal from '../../ui/Modal/Modal';
 
 const categories = ['Painkiller', 'Antibiotic', 'Antihistamine', 'Hormone', 'Other'];
@@ -10,25 +10,6 @@ export default function GlobalMedicineFormModal({ isOpen, onClose, onSubmit, ini
     const [manufacturer, setManufacturer] = useState(initialData?.manufacturer || '');
     const [category, setCategory] = useState(initialData?.category || categories[0]);
     const [errors, setErrors] = useState({});
-
-    useEffect(() => {
-        if (initialData) {
-            // Edit mode -> fill the form
-            setName(initialData.name);
-            setGenericName(initialData.generic_name || '');
-            setManufacturer(initialData.manufacturer || '');
-            setCategory(initialData.category || categories[0]);
-        } else {
-            // Add mode -> clear the form
-            setName('');
-            setGenericName('');
-            setManufacturer('');
-            setCategory(categories[0]);
-        }
-
-        // Clear old validation messages
-        setErrors({});
-    }, [initialData]);
 
     function validate() {
         const newErrors = {};

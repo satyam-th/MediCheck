@@ -66,7 +66,7 @@ export default function Login(){
         if (user.role === 'pharmacy') {
           navigate('/pharmacy/dashboard');
         } else if (user.role === 'worker_admin' || user.role === 'super_admin') {
-          navigate('/admin');
+          navigate('/admin/dashboard');
         } else {
           navigate('/');
         }

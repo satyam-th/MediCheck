@@ -31,7 +31,6 @@ export default function PharmacyTable({ pharmacies = [], onStatusChange }) {
                                             <option value="active">Active</option>
                                             <option value="suspended">Suspended</option>
                                             <option value="banned">Banned</option>
-                                            <option value="pending">Pending</option>
                                         </select>
                                 </td>
                             </tr>

@@ -16,7 +16,7 @@ const navItems = [
 ];
 
 export default function AdminLayout(){
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -24,9 +24,11 @@ export default function AdminLayout(){
         navigate('/');
     };
 
+    const adminName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.email || 'Admin';
+
     return(
         <div className={styles.wrapper}>
-            <SideBar brandname='medicheck' navItems={navItems} userName="Admin" onLogout={handleLogout}/>
+            <SideBar brandname='medicheck' navItems={navItems} userName={adminName} homePath='/admin/dashboard' onLogout={handleLogout}/>
             <div className={styles.main}>
                 <Outlet/>
             </div>

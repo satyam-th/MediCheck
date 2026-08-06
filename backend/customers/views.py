@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from django.db.models import Q  # For combining filter conditions with OR
 
@@ -49,12 +49,56 @@ class MedicineSearchView(APIView):
         if len(query) < 2:
             return Response([])
 
-        medicines = GlobalMedicine.objects.filter(
-            Q(name__icontains=query) | Q(generic_name__icontains=query),
-            approval_status='approved' 
-        )[:10]  
+        words = [w for w in query.split() if w]
+        q_filter = Q()
+        for word in words:
+            q_filter |= (
+                Q(name__icontains=word) |
+                Q(generic_name__icontains=word) |
+                Q(composition__icontains=word)
+            )
+
+        medicines = list(
+            GlobalMedicine.objects.filter(
+                q_filter,
+                approval_status='approved'
+            )
+        )
+
+        # Rank so exact / prefix matches come first, then similar ones.
+        query_lower = query.lower()
+        def rank(med):
+            name = med.name.lower()
+            generic = (med.generic_name or '').lower()
+            if name == query_lower:
+                return 0
+            if name.startswith(query_lower):
+                return 1
+            if generic.startswith(query_lower):
+                return 2
+            if query_lower in name:
+                return 3
+            return 4
+
+        medicines.sort(key=rank)
+        medicines = medicines[:15]
 
         serializer = MedicinePublicSerializer(medicines, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class MedicineDetailView(APIView):
+    """Public single-medicine lookup used by the customer detail page."""
+
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        try:
+            medicine = GlobalMedicine.objects.get(pk=pk, approval_status='approved')
+        except GlobalMedicine.DoesNotExist:
+            return Response({'detail': 'Medicine not found.'}, status=404)
+
+        serializer = MedicinePublicSerializer(medicine, context={'request': request})
         return Response(serializer.data)
 
 
@@ -118,11 +162,14 @@ class NearbyPharmaciesView(APIView):
 class AdminStatsView(APIView):
     """Return platform stats for admin dashboard."""
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminRole]
 
     def get(self, request):
         return Response({
             'total_customers': User.objects.filter(role='customer').count(),
             'total_pharmacies': Pharmacy.objects.count(),
             'total_medicines': GlobalMedicine.objects.filter(approval_status='approved').count(),
+            'pending_medicines': GlobalMedicine.objects.filter(approval_status='pending').count(),
+            'pending_pharmacies': Pharmacy.objects.filter(status='pending').count(),
+            'active_pharmacies': Pharmacy.objects.filter(status='active').count(),
         })

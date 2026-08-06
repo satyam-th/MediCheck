@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin, Phone, Clock, Building2 } from 'lucide-react';
 import api from '../../../services/api';
+import SearchBar from '../../../components/shared/SearchBar/SearchBar';
 import styles from './MedicineDetail.module.css';
 
 const statusLabels = {
@@ -25,10 +26,20 @@ export default function MedicineDetail() {
     async function fetchData() {
       setLoading(true);
       try {
-        const res = await api.get('/availability/', { params: { medicine_id: id } });
-        const data = res.data || [];
+        const [detailRes, stockRes] = await Promise.all([
+          api.get(`/medicines/${id}/`),
+          api.get('/availability/', { params: { medicine_id: id } }),
+        ]);
+        const data = stockRes.data || [];
         setStock(data);
-        if (data.length > 0) {
+        if (detailRes.data) {
+          setMedicine({
+            name: detailRes.data.name,
+            generic_name: detailRes.data.generic_name,
+            requires_prescription: detailRes.data.requires_prescription,
+            photo: detailRes.data.photo,
+          });
+        } else if (data.length > 0) {
           setMedicine({
             name: data[0].medicine_name,
             generic_name: data[0].generic_name,
@@ -47,9 +58,11 @@ export default function MedicineDetail() {
 
   return (
     <div className={styles.page}>
-      <Link to="/search" className={styles.backLink}>
-        <ArrowLeft size={20} /> Back to results
+      <Link to="/" className={styles.backLink}>
+        <ArrowLeft size={20} /> Back to Home
       </Link>
+
+      <SearchBar size="large" className={styles.headerSearch} />
 
       <div className={styles.header}>
         {medicine.photo && (
@@ -99,7 +112,9 @@ export default function MedicineDetail() {
 
               <div className={styles.cardBottom}>
                 <span className={styles.mrp}>Rs. {item.mrp}</span>
-                <span className={styles.qty}>{item.quantity} in stock</span>
+                {item.stock_status === 'low_stock' && (
+                  <span className={styles.lowStockCall}>Low stock — call to confirm</span>
+                )}
               </div>
             </div>
           ))}

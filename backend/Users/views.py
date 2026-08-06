@@ -11,7 +11,24 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        data['user'] = UserSerializer(self.user).data
+        # Only banned pharmacies are locked out — suspended pharmacies may log in
+        # but are restricted to the sales / medicine sections.
+        user_data = UserSerializer(self.user).data
+
+        if self.user.role == 'pharmacy':
+            from pharmacies.models import Pharmacy
+            pharmacy = getattr(self.user, 'pharmacy', None)
+
+            if pharmacy and pharmacy.status == 'banned':
+                from rest_framework.exceptions import PermissionDenied
+                raise PermissionDenied(
+                    'Your pharmacy account has been banned. Please contact support.'
+                )
+
+            if pharmacy:
+                user_data['pharmacy_status'] = pharmacy.status
+
+        data['user'] = user_data
 
         return data
 
@@ -41,10 +58,17 @@ class RegisterPharmacyView(generics.CreateAPIView):
         if User.objects.filter(email=data.get('email')).exists():
             return Response({'email': 'A user with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        password = data.get('password')
+        if not password or len(password) < 8:
+            return Response(
+                {'password': 'Password must be at least 8 characters.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         user = User.objects.create_user(
             email=data['email'],
             username=data.get('username', data['email']),
-            password=data['password'],
+            password=password,
             role='pharmacy',
             phone=data.get('primaryContact', ''),
             first_name=data.get('pharmacyName', ''),

@@ -1,5 +1,5 @@
 
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 
@@ -28,6 +28,7 @@ class Pharmacy(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     status         = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     license_number = models.CharField(max_length=100, blank=True)
+    pan_number     = models.CharField(max_length=100, blank=True)
 
     open_time  = models.TimeField(null=True, blank=True)
     close_time = models.TimeField(null=True, blank=True)
@@ -56,6 +57,84 @@ class Pharmacy(models.Model):
 
       
         return self.open_time <= now <= self.close_time
+
+
+
+class PharmacyProfileChangeRequest(models.Model):
+
+    STATUS_CHOICES = [
+        ('pending',  'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    # Fields a pharmacy may request to change (admin must approve)
+    # key -> target: license_number/pan_number -> Pharmacy; owner_* -> User
+    REQUESTABLE_FIELDS = {
+        'license_number':     'pharmacy',
+        'pan_number':         'pharmacy',
+        'owner_first_name':   'user',
+        'owner_last_name':    'user',
+        'owner_phone':        'user',
+    }
+
+    # Request key -> actual model field on the owner User account
+    OWNER_FIELD_MAP = {
+        'owner_first_name': 'first_name',
+        'owner_last_name':  'last_name',
+        'owner_phone':      'phone',
+    }
+
+    pharmacy = models.ForeignKey(
+        Pharmacy,
+        on_delete=models.CASCADE,
+        related_name='profile_change_requests',
+    )
+    requested_by = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='profile_change_requests',
+    )
+
+    requested_changes = models.JSONField(default=dict)
+
+    status     = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    note       = models.CharField(max_length=300, blank=True)
+
+    reviewed_by   = models.ForeignKey(
+        'users.User',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='reviewed_profile_requests',
+    )
+    created_at  = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.pharmacy.name} — {self.status}"
+
+    def apply_changes(self):
+        """Write the approved changes onto the Pharmacy / owner User."""
+        with transaction.atomic():
+            pharmacy = self.pharmacy
+            user     = pharmacy.user
+            user_fields = []
+
+            for field, value in self.requested_changes.items():
+                target = self.REQUESTABLE_FIELDS.get(field)
+                if target == 'pharmacy' and value is not None:
+                    setattr(pharmacy, field, value)
+                elif target == 'user' and value is not None:
+                    attr = self.OWNER_FIELD_MAP.get(field)
+                    if attr is None:
+                        continue
+                    setattr(user, attr, value)
+                    user_fields.append(attr)
+
+            pharmacy.save()
+            if user_fields:
+                user.save(update_fields=user_fields)
 
 
 

@@ -55,6 +55,7 @@ export default function AppRoute(){
                     <AdminLayout/>
                 </ProtectedRoute>
             }>
+                <Route index element={<AdminDashboard/>} />
                 <Route path='dashboard' element={<AdminDashboard/>} />
                 <Route path='pharmacy' element={<AdminPharmacy/>} />
                 <Route path='medicines' element={<AdminMedicines/>}/>

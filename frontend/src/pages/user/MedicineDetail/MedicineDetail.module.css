@@ -148,7 +148,8 @@
   color: var(--text-color-primary);
 }
 
-.qty {
+.lowStockCall {
   font-size: 13px;
-  color: var(--text-color-secondary);
+  font-weight: 600;
+  color: #b45309;
 }

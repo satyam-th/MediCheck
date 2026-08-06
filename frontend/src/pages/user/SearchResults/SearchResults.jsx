@@ -2,6 +2,7 @@ import { useState, useEffect, startTransition } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, MapPin, Clock, ArrowLeft } from 'lucide-react';
 import api from '../../../services/api';
+import SearchBar from '../../../components/shared/SearchBar/SearchBar';
 import styles from './SearchResults.module.css';
 
 export default function SearchResults() {
@@ -19,12 +20,19 @@ export default function SearchResults() {
       .finally(() => startTransition(() => setLoading(false)));
   }, [query]);
 
+  const ql = query.toLowerCase();
+  const hasExact = results.some(
+    (med) => med.name.toLowerCase() === ql || (med.generic_name || '').toLowerCase() === ql
+  );
+  const isSimilarOnly = results.length > 0 && !hasExact;
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <Link to="/" className={styles.backLink}>
           <ArrowLeft size={20} /> Back to Home
         </Link>
+        <SearchBar size="large" className={styles.headerSearch} />
         <h1 className={styles.title}>
           <Search size={24} /> Search Results
         </h1>
@@ -35,6 +43,12 @@ export default function SearchResults() {
 
       <div className={styles.content}>
         {loading && <p className={styles.loading}>Searching...</p>}
+
+        {!loading && isSimilarOnly && (
+          <div className={styles.similarNote}>
+            No exact match for <strong>"{query}"</strong> — showing similar medicines.
+          </div>
+        )}
 
         {!loading && results.length === 0 && query && (
           <div className={styles.empty}>

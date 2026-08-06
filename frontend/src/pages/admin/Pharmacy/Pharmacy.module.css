@@ -36,3 +36,108 @@
   font-size: 15px;
   padding: 24px 0;
 }
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.addBtn:hover {
+  background: var(--primary-hover);
+}
+
+.sectionTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-color-primary);
+  margin: 0;
+}
+
+.requestList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.requestItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #fff;
+}
+
+.requestInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.requestPharmacy {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-color-primary);
+}
+
+.requestChanges {
+  font-size: 14px;
+  color: var(--text-color-primary);
+  word-break: break-word;
+}
+
+.requestMeta {
+  font-size: 12px;
+  color: var(--text-color-secondary);
+}
+
+.requestActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.approveBtn,
+.rejectBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.approveBtn {
+  background: #e6f7ee;
+  color: #15803d;
+}
+
+.approveBtn:hover {
+  background: #d1f0e0;
+}
+
+.rejectBtn {
+  background: #fdeaea;
+  color: #b91c1c;
+}
+
+.rejectBtn:hover {
+  background: #f9d6d6;
+}

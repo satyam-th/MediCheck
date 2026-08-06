@@ -20,7 +20,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const refresh = localStorage.getItem('refresh_token');
@@ -34,10 +34,10 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${data.access}`;
         return api(originalRequest);
       } catch {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
+        clearTokens();
+        if (!window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login';
+        }
       }
     }
 

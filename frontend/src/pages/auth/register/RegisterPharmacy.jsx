@@ -179,7 +179,8 @@ export default function RegisterPharmacy() {
       toast.success('Application submitted. Please wait for admin verification.');
       setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
-      const msg = err.response?.data?.email?.[0]
+      const emailErr = err.response?.data?.email;
+      const msg = (Array.isArray(emailErr) ? emailErr[0] : emailErr)
         || err.response?.data?.message
         || 'Registration failed. Please try again.';
       toast.error(msg);
