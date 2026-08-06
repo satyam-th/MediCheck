@@ -17,7 +17,9 @@ function groupByMedicine(items){
         if (!groups.has(key)) groups.set(key, []);
         groups.get(key).push(item);
     }
-    return [...groups.values()];
+    return [...groups.values()].sort((a, b) =>
+        a[0].medicine_name.localeCompare(b[0].medicine_name)
+    );
 }
 
 export default function InventoryTable({items=[], onEdit,  onDelete}){
