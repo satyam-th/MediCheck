@@ -12,24 +12,28 @@ The platform also enables pharmacies to maintain and update their inventory, ens
 
 ### User Portal
 
-- Search for medicines by name
+- Search for medicines by name, generic name, or composition
 - View medicine availability across registered pharmacies
 - Locate nearby pharmacies with the required medicine in stock
 - Access pharmacy details and location information
 
 ### Pharmacy Portal
 
-- Manage and update medicine inventory
-- Add new medicines to stock records
-- Modify availability and stock status in real time
-- Monitor listed products efficiently
+- Manage and update medicine inventory (add, edit, and delete batches)
+- Record sales through a built-in point-of-sale (POS) that decrements stock automatically
+- Add new medicines to the global catalogue
+- Monitor low-stock and expiring medicines
+- Manage patients and outstanding credit
+- Mark staff attendance
+- Request owner / license / PAN updates, subject to admin approval
 
 ### Admin Portal
 
 - Review and approve pharmacy registrations
-- Manage users and pharmacy accounts
-- Monitor platform activity and maintain database integrity
-- Oversee system-wide operations
+- Approve, suspend, or ban pharmacy accounts
+- Manage the global medicine catalogue (add, edit, approve, reject, delete)
+- Review and approve pharmacy profile change requests
+- Manage customers and monitor platform statistics
 
 ## Technology Stack
 
@@ -76,44 +80,28 @@ cd backend
 python manage.py shell < seed.py
 ```
 
-## API Endpoints
+On Windows PowerShell, use:
 
-### Auth (`/api/auth/`)
-| Method | Path              | Description               |
-|--------|-------------------|---------------------------|
-| POST   | `/login/`         | Login, returns JWT tokens |
-| POST   | `/register/`      | Register as customer      |
-| POST   | `/register/pharmacy/` | Register as pharmacy (pending approval) |
-| GET    | `/me/`            | Get current user profile  |
-| POST   | `/token/refresh/` | Refresh JWT access token  |
+```powershell
+cd backend
+Get-Content seed.py | python manage.py shell
+```
 
-### Public (`/api/`)
-| Method | Path                    | Description                        |
-|--------|-------------------------|------------------------------------|
-| GET    | `/search/?q=`          | Search approved medicines           |
-| GET    | `/availability/`        | Check medicine stock by pharmacy    |
-| GET    | `/pharmacies/nearby/`   | List active pharmacies with GPS     |
+The seed script populates the database with medicines, inventory, sales, and the following demo accounts:
 
-### Pharmacy Dashboard (`/api/pharmacy/`)
-| Method | Path                     | Description              |
-|--------|--------------------------|--------------------------|
-| GET    | `/profile/`              | Get pharmacy profile     |
-| GET    | `/inventory/`            | List inventory           |
-| POST   | `/inventory/`            | Add inventory item       |
-| GET    | `/inventory/low_stock/`  | Low stock items          |
-| GET    | `/sales/`                | List sales               |
-| POST   | `/sales/`                | Create sale              |
-| GET    | `/sales/daily_summary/`  | Today's sales summary    |
-| POST   | `/attendance/`           | Mark staff attendance    |
-
+| Role          | Email                   | Password    |
+|---------------|-------------------------|-------------|
+| Admin         | admin@medicheck.com     | admin123    |
+| Pharmacy      | pharmacy@citymeds.com   | pharm1234   |
+| Customer      | ram@example.com         | customer123 |
 ## Project Objective
 
 The primary objective of MediCheck is to reduce the time and effort required to find essential medicines. By connecting users with pharmacies through a centralized platform, the system promotes convenience, accessibility, and efficient healthcare service delivery.
 
 ## Development Team
 
-- Satyam Thapa
 - Samiksha Shrestha
+- Satyam Thapa
 - Ugesh KC
 
 **Malpi International College — Semester IV Project**
